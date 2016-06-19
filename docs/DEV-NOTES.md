@@ -4,7 +4,6 @@
 2016-06-19 v3 ...
 
 
-
 ## python module project setup
 
 #### install python module template
@@ -65,8 +64,6 @@ In order to uninstall and clean up the mess before starting over:
 	deactivate
 	rmvirtualenv pathpattern
 ```
-
-
 
 ##  igraph testing
 
