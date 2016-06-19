@@ -4,20 +4,54 @@
 2016-06-19 v3 ...
 
 
-## python and igraph setup
+
+## python module project setup
+
+#### install python module template
+
+```bash
+
+	cd /Users/jeremydouglass/Dropbox/journals/journal-dropbox-eaglefiler/Files/Pathpattern/pathpattern-master
+	git clone https://github.com/kennethreitz/samplemod.git
+	# ... now move contents into new folder, sans .git, then ...
+	git init
+	git add .
+	git commit -m "Samplemod template"
+```
+
+#### setup python virtualenv
 
 ```bash
 
 	source ~/.profile
 	mkvirtualenv pathpattern
 	workon pathpattern
-	
-	cd /Users/jeremydouglass/Dropbox/journals/journal-dropbox-eaglefiler/Files/Pathpattern/pathpattern-master
+```
+
+#### customize template
+
+```bash
+
+	git mv sample pathpattern
+	git rm tests/test_advanced.py 
+	git mv tests/test_basic.py tests/tests.py
+	git status
+	git add LICENSE Makefile README.rst docs/ pathpattern/__init__.py requirements.txt setup.py tests/tests.py 
+	git status
+	git commit -m "customized template for pathpattern"
+	git status
+	git add docs/DEV-NOTES.md 
+	git commit -m "tracking DEV-NOTES.md"
+```
+
+#### install python igraph
+
+```bash
+
 	pip install python-igraph
 	pip freeze > requirements.txt
 	cat requirements.txt 
-		python-igraph==0.7.1.post6
-	
+			python-igraph==0.7.1.post6
 ```
 
 Note that `pip install igraph` is *not* correct -- and it came with a ton of unwanted dependencies.
@@ -31,6 +65,8 @@ In order to uninstall and clean up the mess before starting over:
 	deactivate
 	rmvirtualenv pathpattern
 ```
+
+
 
 ##  igraph testing
 

@@ -12,7 +12,7 @@ with open('LICENSE') as f:
 setup(
     name='pathpattern',
     version='0.0.1',
-    description='graph analysis of ',
+    description='graph analysis of branching interactive works',
     long_description=readme,
     author='Jeremy Douglass',
     author_email='jeremydouglass@gmail.com',
