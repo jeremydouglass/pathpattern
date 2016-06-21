@@ -3,3 +3,6 @@ init:
 
 test:
 	python -m tests.tests
+
+test_app:
+	python -m tests.app
