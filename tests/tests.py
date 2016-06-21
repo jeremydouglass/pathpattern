@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .context import pathpattern
+from pathpattern import *
 
 import unittest
 
@@ -41,6 +42,50 @@ class RenderTestSuite(unittest.TestCase):
 #        assert True
 
 
+class UtilsTestSuite(unittest.TestCase):
+    """ """
+    
+    def test_tgf_to_list(self):
+        # t = utils.tgf_to_list("../super_mario_bros/super_mario_bros-levels.tgf")
+        # print t
+        return True
+
+    def test_readgraph(self):
+        # t = Graph.Read_Edgelist("../super_mario_bros/super_mario_bros-levels.el")
+        filename = '../super_mario_bros/super_mario_bros-levels.el'
+        li = []
+        try:
+            with open(filename, 'r') as inputfile:
+                for line in inputfile:
+                    term = line.strip().replace(" ", "").split('\t')
+                    for a in term:
+                        li.append(a)
+        except OSError:
+            print "File did not load."
+        print 'list: ...'
+        print li
+        s = set(li)
+        
+        print 'set: ...'
+        print s
+        t = Graph.Read_Ncol(filename, directed=True)
+        print 'graph ncol: ...'
+        print t
+        print t.degree
+        print t.degree()
+        print t.indegree
+        print t.indegree()
+        print t.outdegree
+        print t.outdegree()
+        print t.degree_distribution(mode = 'ALL')
+        print t.degree_distribution(mode = 'IN')
+        print t.degree_distribution(mode = 'OUT')
+        degrees = zip(t.indegree(), t.outdegree())
+        print degrees
+        from collections import Counter
+        degrees_counter = Counter(degrees)
+        print degrees_counter
+
 class AdvancedTestSuite(unittest.TestCase):
     """Advanced test cases."""
 
@@ -50,4 +95,7 @@ class AdvancedTestSuite(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
 

@@ -157,6 +157,37 @@ def picklefile_to_list(filename):
     return results
 
 
+### TGF UTILS
+
+
+def tgf_to_list(filename):
+    """Load tgf file contents into two lists of nodes and of edges."""
+    ## http://stackoverflow.com/questions/18448847/import-txt-file-and-having-each-line-as-a-list_    
+    results = []
+    tgf_nodes = []
+    tgf_edges = []
+    if not filename: raise ValueError('No filename given.')
+    try:
+        with open(filename, 'r') as inputfile:
+            phase = 'nodes'
+            for line in inputfile:
+                if '#' in line.strip():
+                    phase = 'edges'
+                    continue
+                if phase == 'nodes':
+                    # print 'node: ' + str(line)
+                    tgf_nodes.append(tuple(line.split()))
+                if phase == 'edges':
+                    # http://stackoverflow.com/questions/11001247/fastest-way-to-split-a-concatenated-string-into-a-tuple-and-ignore-empty-strings
+                    # print 'edge' + str(line)
+                    tgf_edges.append(tuple(line.split()))
+    except OSError:
+        print "File did not load."
+    results.append(tgf_nodes)
+    results.append(tgf_edges)
+    return results
+
+
 ## JINJA2 UTILS
 
 
