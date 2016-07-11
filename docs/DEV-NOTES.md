@@ -3,6 +3,41 @@
 2016-06-18 v2
 2016-06-19 v3 ...
 
+## MISC MESS
+
+Hive plots:
+
+-  hiveplot.net
+-  https://bost.ocks.org/mike/hive/
+-  https://bl.ocks.org/mbostock/2066421
+
+Tabs
+
+-  **** igraph metrics and viz: [Basic graph analytics using igraph](http://horicky.blogspot.com/2012/04/basic-graph-analytics-using-igraph.html)
+
+Twine-Undum-like hypertext authoring frameworks
+
+-  Twine https://emshort.wordpress.com/2012/11/10/choice-based-narrative-tools-twine/
+-  Undum
+   -  http://undum.com/games/tutorial.en.html
+   -  https://github.com/idmillington/undum/blob/master/games/media/games/tutorial/tutorial.game.en.js
+   -  http://sequitur.github.io/raconteur/
+-  ChoiceScript
+-  Ink Inklescript Inklewriter 
+   -  Ink example The Intercept https://github.com/inkle/the-intercept/blob/master/Assets/Ink/TheIntercept.ink
+   -  Inklewriter http://www.inklestudios.com/inklewriter/
+      -  https://emshort.wordpress.com/2012/09/11/choice-based-narrative-tools-inklewriter/
+-  http://ifwiki.org/index.php/Textallion
+-  http://dendry.org/
+-  varytale (dead)
+   -  https://emshort.wordpress.com/2012/06/10/writing-for-varytale/
+   -  http://www.intfiction.org/forum/viewtopic.php?f=22&t=19543 (dead)
+   -  see http://pyramidifblog.blogspot.com/2015/07/alas-storynexus.html
+-  StoryNexus (dead) http://storynexus.com/ 
+-  StorySpace 3 https://emshort.wordpress.com/2016/04/28/mark-bernstein-on-hypertext-narrative/#more-20064
+-  Wunderverse https://emshort.wordpress.com/2015/11/26/wunderverse/
+-  ...gamebook format http://www.intfiction.org/forum/viewtopic.php?f=38&t=11641&start=0
+-  
 
 ## python module project setup
 
@@ -48,6 +83,8 @@
 ```bash
 
 	pip install python-igraph
+	pip install pyx
+	pip install sphinx
 	pip freeze > requirements.txt
 	cat requirements.txt 
 			python-igraph==0.7.1.post6
@@ -72,7 +109,7 @@ Docs:
 
 -  http://igraph.org/python/#docs
    -  motifs: http://igraph.org/python/doc/igraph.datatypes.TriadCensus-class.html
-   -  motifs - "motifs_randesu": http://igraph.org/python/doc/igraph.GraphBase-class.html
+   -  motifs - "motifs_randesu": http://igraph.org/python/doc/igraph.GraphBase-class.html#motifs_randesu
       -  get_subisomorphisms_lad
 	  -  is_dag()
    -  more on motifs from the igraph python documentation pdf: http://igraph.org/python/doc/python-igraph.pdf
@@ -85,6 +122,7 @@ Simple sample graph for all testing below:
 	g = Graph(directed=True)
 	g.add_vertices(11)
 	g.add_edges([(0,1), (1,2), (1,3), (2,4), (2,5), (3,5), (3,6), (4,7), (4,8), (5,8), (5,9), (6,9), (6,10)])
+
 
 
 
@@ -120,18 +158,18 @@ Degree distribution:
 http://igraph.org/python/doc/igraph.Graph-class.html#degree_distribution
 http://igraph.org/python/doc/igraph.GraphBase-class.html#degree
 
-	>>> print g.degree_distribution(mode = ALL)
+	>>> print g.degree_distribution(mode = 'ALL')
 	N = 11, mean +- sd: 2.3636 +- 1.0269
 	[1, 2): *** (3)
 	[2, 3): ** (2)
 	[3, 4): ***** (5)
 	[4, 5): * (1)
-	>>> print g.degree_distribution(mode = IN)
+	>>> print g.degree_distribution(mode = 'IN')
 	N = 11, mean +- sd: 1.1818 +- 0.6030
 	[0, 1): * (1)
 	[1, 2): ******* (7)
 	[2, 3): *** (3)
-	>>> print g.degree_distribution(mode = OUT)
+	>>> print g.degree_distribution(mode = 'OUT')
 	N = 11, mean +- sd: 1.1818 +- 0.9816
 	[0, 1): **** (4)
 	[1, 2): * (1)
@@ -167,6 +205,12 @@ http://stackoverflow.com/questions/9001509/how-can-i-sort-a-dictionary-by-key
 	(1, 2): 5
 	(2, 0): 2
 	(2, 2): 1
+
+
+... re sorting complex key, see also:
+-  http://stackoverflow.com/questions/13523070/python-complex-dictionary-keys
+-  https://bytes.com/topic/python/answers/455645-create-dict-two-lists
+
 
 ## dyad census
 
@@ -254,14 +298,54 @@ https://lists.nongnu.org/archive/html/igraph-help/2011-01/msg00101.html
 
 ### tgf import-export in python
 
+
 Surprisingly, very little.
 
 Found this simple tgf renderer CallGraphVisitor.to_tgf -- here https://github.com/davidfraser/pyan/blob/master/pyan.py
 	
 	def to_tgf(self, **kwargs):
-		...
+	        draw_defines = ("draw_defines" in kwargs  and  kwargs["draw_defines"])
+	        draw_uses = ("draw_uses" in kwargs  and  kwargs["draw_uses"])
+
+	        s = ''
+	        i = 1
+	        id_map = {}
+	        for name in self.nodes:
+	            for n in self.nodes[name]:
+	                if n.defined:
+	                    s += """%d %s\n""" % (i, n.get_short_name())
+	                    id_map[n] = i
+	                    i += 1
+	                #else:
+	                #    print >>sys.stderr, "ignoring %s" % n
+        
+	        s += """#\n"""
+        
+	        if draw_defines:
+	            for n in self.defines_edges:
+	                for n2 in self.defines_edges[n]:
+	                    if n2.defined and n2 != n:
+	                        i1 = id_map[n]
+	                        i2 = id_map[n2]
+	                        s += """%d %d D\n""" % (i1, i2)
+
+	        if draw_uses:
+	            for n in self.uses_edges:
+	                for n2 in self.uses_edges[n]:
+	                    if n2.defined and n2 != n:
+	                        i1 = id_map[n]
+	                        i2 = id_map[n2]
+	                        s += """%d %d U\n""" % (i1, i2)
+	        return s
+	
 
 
+misc: http://finzi.psych.upenn.edu/library/comato/html/read.tgf.html
+
+#### NEW -- adding edges by name for tgf import
+
+-  http://stackoverflow.com/questions/29715837/python-igraph-vertex-indices
+-  ... http://igraph.org/python/doc/igraph.Graph-class.html
 
 
 #### draw nodes!
@@ -417,3 +501,94 @@ source code
 Calculates an approximately or exactly minimal feedback arc set.
 
 A feedback arc set is a set of edges whose removal makes the graph acyclic. Since this is always possible by removing all the edges, we are in general interested in removing the smallest possible number of edges, or an edge set with as small total weight as possible. 
+
+
+
+## SOMEDAY - pyunicorn
+
+complex python network library, has some motif code in it.
+
+-  http://pik-potsdam.de/~donges/pyunicorn/
+-  https://github.com/pik-copan/pyunicorn
+-  https://github.com/pik-copan/pyunicorn/blob/master/pyunicorn/core/network.py
+
+
+
+## python reading notes
+
+Core data -- tuples etc.:
+
+-  passing around 2D lists, ranges, slices:
+   -  https://gist.github.com/stenof/47d2e007371a657e93b0
+   -  http://www.dotnetperls.com/2d-python
+   -  http://stackoverflow.com/questions/16548668/iterating-over-a-2-dimensional-python-list
+   -  https://www.codecademy.com/en/forum_questions/5080da8d8868280200001098
+   -  http://stackoverflow.com/questions/31924150/python-passing-a-range-into-a-function
+   -  https://docs.python.org/2/library/functions.html#slice
+   -  http://stackoverflow.com/questions/28652976/passing-array-range-as-argument-to-a-function
+   -  http://stackoverflow.com/questions/14048728/generate-list-of-range-tuples-with-given-boundaries-in-python
+
+-  split string into tuples:
+   -  http://stackoverflow.com/questions/11001247/fastest-way-to-split-a-concatenated-string-into-a-tuple-and-ignore-empty-strings
+   -  http://stackoverflow.com/questions/8113782/split-string-on-whitespace-in-python
+
+-  ...loops and tuples:
+   -  http://anh.cs.luc.edu/python/hands-on/3.1/handsonHtml/loopsandtuples.html
+
+-  split, csv module
+   -  http://www.dotnetperls.com/split-python
+   -  http://www.dotnetperls.com/csv-python
+
+-  text to string variable
+   -  http://stackoverflow.com/questions/8369219/how-do-i-read-a-text-file-into-a-string-variable-in-python
+
+-  pretty printing nested data: lists of lists of tuples etc.:
+   -  https://djangosnippets.org/snippets/2773/
+   -  https://docs.python.org/2/library/pprint.html
+   -  http://stackoverflow.com/questions/3229419/pretty-printing-nested-dictionaries-in-python
+   -  http://stackoverflow.com/questions/15550617/how-to-force-pprint-to-print-one-list-tuple-dict-element-per-line
+
+Import / Export:
+
+-  ncol
+-  edgelist
+-  trivial graph format
+   -  https://en.wikipedia.org/wiki/Trivial_Graph_Format
+   -  see "to_tgf" example in code: https://github.com/davidfraser/pyan/blob/master/pyan.py
+
+Classes:
+
+-  parameters, optional parameters -- param, *args, **kwargs
+   -  http://stackoverflow.com/questions/12399803/how-to-check-if-a-key-in-kwargs-exists
+   -  http://stackoverflow.com/questions/1098549/proper-way-to-use-kwargs-in-python
+   -  ...and class constructors: http://stackoverflow.com/questions/682504/what-is-a-clean-pythonic-way-to-have-multiple-constructors-in-python
+   -  http://www.diveintopython.net/power_of_introspection/optional_arguments.html
+-  classes
+   -  class constructors and defaults http://stackoverflow.com/questions/2164258/multiple-constructors-in-python
+
+iGraph:
+
+-  igraph general
+   -  http://igraph.org/python/doc/tutorial/tutorial.html
+-  igraph problem -- edgelist import
+   -  ended up using Ncol instead, as per:
+   -  http://stackoverflow.com/questions/32513650/can-import-edgelist-to-igraph-python
+   -  http://igraph.org/python/doc/igraph-pysrc.html#GraphBase.Read_Edgelist
+-  ...file-like objects, e.g. StreamIO
+   -  originally interested because the igraph Ncol interface only took a filename, not any in-memory object. Didn't end up using, just wrote a new file then read it in.
+   -  http://stackoverflow.com/questions/8240647/fast-data-move-from-file-to-some-stringio
+   -  https://docs.python.org/2/library/stringio.html
+   -  https://pymotw.com/2/StringIO/
+   -  http://stackoverflow.com/questions/1883326/using-python-how-do-i-to-read-write-data-in-memory-like-i-would-with-a-file
+   -  http://stackoverflow.com/questions/28368659/is-it-possible-to-rewind-a-python-stringio-in-memory-file
+   -  http://stackoverflow.com/questions/1368261/python-file-like-buffer-object
+-  ...file copy
+   -  http://stackoverflow.com/questions/123198/how-do-i-copy-a-file-in-python
+
+General programming:
+
+-  flow control -- if etc.
+   -  https://docs.python.org/2/tutorial/controlflow.html
+   -  http://stackoverflow.com/questions/181530/python-style-multiple-line-conditions-in-ifs
+-  strings
+   -  http://stackoverflow.com/questions/3437059/does-python-have-a-string-contains-substring-method

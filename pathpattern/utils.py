@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from os import path
 
 def list_to_string(list_, **kwargs):
     """Convert list_ into string. Accepts keyword 'join', default linebreak."""
@@ -76,6 +77,28 @@ def string_to_txtfile(string_, filename):
             # outputfile.write(string_)
     except OSError:
         print "File not written."
+
+
+### STRING UTILS
+
+def filelabel(fpath):
+
+    ## filepath manipulation http://stackoverflow.com/questions/541390/extracting-extension-from-filename-in-python
+    f_path = path.basename(fpath)                   #  'love is not CYOA.txt.tgf'
+    f_file, f_ext = path.splitext(f_path)  #  '../input/tgf/love is not CYOA.txt'  '.tgf'
+    ## clean filename for prefix label -- pyx complains: ValueError: for security reasons, only characters, digits and the characters '_-./' are allowed in filenames
+    ## addressing as per: http://stackoverflow.com/questions/1276764/stripping-everything-but-alphanumeric-chars-from-a-string-in-python
+    f_label = f_file.strip().replace (' ', '_').replace('.','_')
+    delchars = ''.join(c for c in map(chr, range(256)) if not c.isalnum() and not c=='_')   
+    f_label = f_label.translate(None, delchars) + '_'
+    return f_label
+
+
+def tlabel(lstr):
+    ltxt = lstr.strip().replace(' ', '_').replace('.','_')
+    delchars = ''.join(c for c in map(chr, range(256)) if not c.isalnum() and not c=='_')
+    ltxt = ltxt.translate(None, delchars)
+    return ltxt
 
 
 ### HTML UTILS
