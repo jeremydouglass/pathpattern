@@ -13,7 +13,11 @@ import regex as re
 
 
 
-
+## set pyx unit scale (default 1cm, ~43 pixels) to 1 inch
+## http://pyx.sourceforge.net/manual/unit.html
+## http://nullege.com/codes/search/pyx.unit.set
+## https://github.com/mjg/PyX/blob/master/test/unit/test_unit.py
+unit.set(uscale=3, defaultunit="inch")
 
 
 class GlyphSet():
@@ -308,6 +312,11 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
     """Return an igraph canvas glyph image based on indegree, outdegree."""
     canvas_ = canvas.canvas();
 
+    ## temp manual flag - turn border off 0, variable 1, solid 2
+    boxcolorflag=2
+    ## temp manual flag - turn color background off and on
+    fillcolorflag=1
+
     #### COLOR COUNT MAPPING
     # ## pyx color gradients
     # http://pyx.sourceforge.net/manual/color.html
@@ -334,9 +343,11 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
     cmax = degreerange[1]
     cnorm = float(0)
     cnorm = float(degreecount - cmin) / float(cmax-cmin) # norm = x[i]−min(x) / (max(x)−min(x))
-    if cnorm > 0:
-      print 'cmin/cmax: ' + str(cmin) + ' ' + str(cmax) + '    cnorm: ' + str(cnorm)
-      canvas_.fill(path.rect(0, 0, 1, 1), [color.gradient.WhiteRed.getcolor(cnorm)])
+
+    if fillcolorflag == 1:
+        if cnorm > 0:
+            print 'cmin/cmax: ' + str(cmin) + ' ' + str(cmax) + '    cnorm: ' + str(cnorm)
+            canvas_.fill(path.rect(0, 0, 1, 1), [color.gradient.WhiteRed.getcolor(cnorm)])
 
     # # if outdegree == 1:
     # #     canvas_.fill(path.rect(0, 0, 1, 1), [color.rgb.red])
@@ -363,24 +374,37 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
     # elif outdegree == 0:
     #     boxcolor = color.cmyk.RedOrange
     
-    boxcolor = color.cmyk(0, 0, 0, 0.25)
-    if (indegree == 0) and (outdegree == 0):
-        boxcolor = color.cmyk.White
-    elif indegree == 0:
-        boxcolor = color.cmyk.YellowGreen
-    elif outdegree == 0:
-        boxcolor = color.cmyk.RedOrange
+    if boxcolorflag == 1:     
+        boxcolor = color.cmyk(0, 0, 0, 0.25)
+        if (indegree == 0) and (outdegree == 0):
+            boxcolor = color.cmyk.White
+        elif indegree == 0:
+            boxcolor = color.cmyk.YellowGreen
+        elif outdegree == 0:
+            boxcolor = color.cmyk.RedOrange   
+        ## sort of works, but ugly
+        ## https://sourceforge.net/p/pyx/mailman/message/3223332/
+        # canvas_.stroke(path.rect(0, 0, 1, 1), [style.linewidth.Thick,
+        #                              color.rgb.red,
+        #                              deco.filled([pattern.hatched(.2 ,45)])])
+        ## ugh
+        # canvas_.stroke(dg_box, [boxcolor, style.linewidth(.1), pattern.hatched(.1,45)])
+        
+        ## manual bounding box
+        canvas_.stroke(dg_box, [boxcolor, style.linewidth(.1)]) # manual bounding box
+    elif boxcolorflag == 2:
+        boxcolor = color.cmyk.Black
+        ## reset box wider for cutter
+        dg_box = path.path(path.moveto(-0.2, -0.2),
+                           path.lineto(-0.2,  1.2),
+                           path.lineto( 1.2,  1.2),
+                           path.lineto( 1.2, -0.2),
+                           path.lineto(-0.2, -0.2),
+                           path.closepath()
+                           )
+        canvas_.stroke(dg_box, [boxcolor, style.linewidth(.05)]) # manual bounding box
 
 
-    ## sort of works, but ugly
-    ## https://sourceforge.net/p/pyx/mailman/message/3223332/
-    # canvas_.stroke(path.rect(0, 0, 1, 1), [style.linewidth.Thick,
-    #                              color.rgb.red,
-    #                              deco.filled([pattern.hatched(.2 ,45)])])
-    ## ugh
-    # canvas_.stroke(dg_box, [boxcolor, style.linewidth(.1), pattern.hatched(.1,45)]) # manual bounding box
-
-    canvas_.stroke(dg_box, [boxcolor, style.linewidth(.1)]) # manual bounding box
     node_dot = path.circle(.5, .5, .15)
     canvas_.fill(node_dot)
 
