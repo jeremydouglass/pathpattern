@@ -18,22 +18,18 @@ class TestAppSuite(unittest.TestCase):
     def test_A_GlyphSet_tgfFile(self):
         """ """
         print "\n\n\ntest_A_GlyphSet_tgfFile\n\n"
-
-        datafiles    = [ '../input/tgf/Lies_(Rick_Pryll).tgf'
-                       , '../input/tgf/love is not CYOA.txt.tgf'
-                       , '../input/tgf/Paper_Pong.tgf'                      # core.py 177: IndexError: list index out of range 
-                       , '../input/tgf/Queneau_a-story-as-you-like-it.tgf'
-                       , '../input/tgf/Sheldon_cookie.tgf'                  # core.py 172: ValueError: dictionary update sequence element #0 has length 0; 2 is required
-                       , '../input/tgf/Thrusts of Justice.tgf'              # core.py 172: ValueError: dictionary update sequence element #0 has length 0; 2 is required
-                       , '../input/tgf/TutorText0.tgf'
-                       , '../input/tgf/jsayers.tgf'
-                       , '../super_mario_bros/super_mario_bros-levels.tgf'
-                       , '../input/tgf/Yorick.txt.tgf'
-                       , '../input/tgf/CYOA_018.tgf'
-                       , '../input/tgf/CYOA_112.tgf'
-                       , '../input/tgf/Hopscotch_combined.tgf'
-                       , '../input/tgf/Hopscotch_TOC1.tgf'
-                       , '../input/tgf/Hopscotch_TOC2.tgf'
+        dfp = '/Users/jeremydouglass/Documents/Programming/github/transverse-gallery/assets/gamebooks/tgf/'
+        datafiles    = [ dfp + '01-01 CYOA -- Cave of Time, The.txt.tgf'
+                       , dfp + '01-05 CYOA -- Cave of Time, The.txt.tgf'
+                       , dfp + '01-07 CYOA -- Cave of Time, The (115).txt.tgf'
+                       , dfp + '01-07v2 CYOA -- Cave of Time, The (115).txt.tgf'
+                       , dfp + '01-14 CYOA -- By Balloon to the Sahara.txt.tgf'
+                       , dfp + '01-16 CYOA -- Space and Beyond.txt.tgf'
+                       , dfp + '01-20 CYOA -- Mystery of Chimney Rock, The.txt.tgf'
+                       , dfp + '01-24 CYOA -- Your Code Name is Jonah.txt.tgf'
+                       , dfp + '01-27 CYOA -- Third Planet from Altair, The.txt.tgf'
+                       , dfp + '01-29 CYOA -- Deadwood City.txt.tgf'
+                       , dfp + '01-31 CYOA -- Who Killed Harlowe Thrombey.txt.tgf'
                        ]
 
         tests = zip(datafiles)
@@ -82,21 +78,17 @@ class TestAppSuite(unittest.TestCase):
         """ Collect a set of graphs into one huge metagraph """
         print "\n\n\ntest_A_GlyphSet_tgfFile_batch\n\n"
 
-        datafiles    = [ '../input/tgf/Lies_(Rick_Pryll).tgf'
-                       , '../input/tgf/love is not CYOA.txt.tgf'
-                       , '../input/tgf/Paper_Pong.tgf'                      # core.py 177: IndexError: list index out of range 
-                       , '../input/tgf/Queneau_a-story-as-you-like-it.tgf'
-                       , '../input/tgf/Sheldon_cookie.tgf'                  # core.py 172: ValueError: dictionary update sequence element #0 has length 0; 2 is required
-                       , '../input/tgf/Thrusts of Justice.tgf'              # core.py 172: ValueError: dictionary update sequence element #0 has length 0; 2 is required
-                       , '../input/tgf/TutorText0.tgf'
-                       , '../input/tgf/jsayers.tgf'
-                       , '../super_mario_bros/super_mario_bros-levels.tgf'
-                       , '../input/tgf/Yorick.txt.tgf'
-                       , '../input/tgf/CYOA_018.tgf'
-                       , '../input/tgf/CYOA_112.tgf'
-                       , '../input/tgf/Hopscotch_combined.tgf'
-                       , '../input/tgf/Hopscotch_TOC1.tgf'
-                       , '../input/tgf/Hopscotch_TOC2.tgf'
+        datafiles    = [ dfp + '01-01 CYOA -- Cave of Time, The.txt.tgf'
+                       , dfp + '01-05 CYOA -- Cave of Time, The.txt.tgf'
+                       , dfp + '01-07 CYOA -- Cave of Time, The (115).txt.tgf'
+                       , dfp + '01-07v2 CYOA -- Cave of Time, The (115).txt.tgf'
+                       , dfp + '01-14 CYOA -- By Balloon to the Sahara.txt.tgf'
+                       , dfp + '01-16 CYOA -- Space and Beyond.txt.tgf'
+                       , dfp + '01-20 CYOA -- Mystery of Chimney Rock, The.txt.tgf'
+                       , dfp + '01-24 CYOA -- Your Code Name is Jonah.txt.tgf'
+                       , dfp + '01-27 CYOA -- Third Planet from Altair, The.txt.tgf'
+                       , dfp + '01-29 CYOA -- Deadwood City.txt.tgf'
+                       , dfp + '01-31 CYOA -- Who Killed Harlowe Thrombey.txt.tgf'
                        ]
 
         tests = zip(datafiles)
@@ -126,217 +118,217 @@ class TestAppSuite(unittest.TestCase):
         gs.write_signature()  # write sig image w/ counts
 
 
-    def test_AAA_GlyphSet_tgfFile_diff(self):
-        """ Calculate the difference between GlyphSets """
-        print "\n\n\ntest_A_GlyphSet_tgfFile_batch\n\n"
-
-        datafiles0   = [ '../input/tgf/CYOA_018.tgf' 
-                       , '../input/tgf/Hopscotch_TOC1.tgf'
-                       ]
-
-        datafiles1   = [ '../input/tgf/CYOA_112.tgf'      
-                       , '../input/tgf/Hopscotch_TOC2.tgf'
-                       ]
-
-        tests = zip(datafiles0,datafiles1)
-
-        for t in tests:
-            tf0 = tgfFile(t[0])
-            tfg0 = tf0.to_graph()
-            gs0 = GlyphSet(graph=tfg0, outdir='../output/pyx_glyphs/', prefix=filelabel(t[0]))
-            gs0.write_signature()
-            
-            tf1 = tgfFile(t[1])
-            tfg1 = tf1.to_graph()
-            gs1 = GlyphSet(graph=tfg1, outdir='../output/pyx_glyphs/', prefix=filelabel(t[1]))
-            gs1.write_signature() 
-            
-
-            ## our comparisons will be thrown off if glyphs have count numbers, so wipe them first
-            gs0.nocounts()         # set all counts to 1
-            gs1.nocounts()         # set all counts to 1
-
-            ## if we were adding the lists, we would use +:
-            ##   gsL = gs0.glist+gs1.glist
-            ## ...but we are getting the difference:
-            ## http://stackoverflow.com/questions/3462143/get-difference-between-two-lists
-            ## e.g. list(set(liA) - set(liB))
-            gsL = list(set(gs0.glist) - set(gs1.glist))
-            gs = GlyphSet(list=gsL, outdir='../output/pyx_glyphs/', prefix=filelabel(t[0])+filelabel(t[1]))
-
-            ## currently combining initialized lists in a new object messes up counts and throws an error, as the counts are preserved from their individual lists...?
-            ##   e.g.  if r<0 or r>1 or g<0 or g>1 or b<0 or b>1: raise ValueError            
-            ## ...counts were already stripped above, but just for good measure in case that changes,
-            ## ...I'll just strip counts for now
-            gs.nocounts()         # set all counts to 1
-            gs.write_glyphs()     # write glyph images w/ no counts
-            gs.write_signature()  # write sig image w/ counts
-
-            
-
-    def test_B_tgfFile(self):
-        """ """
-        print "\n\n\ntest_B_tgfFile\n\n"
-        datafiles    = [ 
-                         '../input/tgf/Lies_(Rick_Pryll).tgf'
-                       , '../input/tgf/love is not CYOA.txt.tgf'
-                       , '../input/tgf/Paper_Pong.tgf'                    # core.py line 177: IndexError: list index out of range
-                       , '../input/tgf/Queneau_a-story-as-you-like-it.tgf'
-                       , '../input/tgf/Sheldon_cookie.tgf'                # core.py 172: ValueError: dictionary update sequence element #0 has length 0; 2 is required
-                       , '../input/tgf/Thrusts of Justice.tgf'            # core.py 172: ValueError: dictionary update sequence element #0 has length 0; 2 is required
-                       , '../input/tgf/TutorText0.tgf'
-                       , '../input/tgf/jsayers.tgf'
-                       , '../super_mario_bros/super_mario_bros-levels.tgf'
-                       , '../input/tgf/Yorick.txt.tgf'
-                       , '../input/tgf/CYOA_018.tgf'
-                       , '../input/tgf/CYOA_112.tgf'
-                       , '../input/tgf/Hopscotch_combined.tgf'
-                       , '../input/tgf/Hopscotch_TOC1.tgf'
-                       , '../input/tgf/Hopscotch_TOC2.tgf'
-                       ]
-        edgecounts   = [ 82,
-                         184,
-                         336,
-                         38,
-                         22,
-                         202,
-                         40,
-                         42,
-                         42,
-                         22,
-                         108,
-                         92,
-                         209,
-                         55,
-                         154
-                       ]
-        tests = zip(datafiles, edgecounts)
-        
-        for t in tests:
-            print t
-            tf = tgfFile(t[0])
-            self.assertTrue(tf.nodelist)
-            self.assertTrue(tf.nodeset)
-            self.assertTrue(tf.nodedict)
-            self.assertTrue(tf.edgelist)
-            self.assertTrue(tf.filename)
-            # print tf
-            self.assertEqual(len(tf),t[1])
-            ef = tf.write_edgefile()
-            print '  saving:  ' + str(ef) + '\n'
-
-    def test_C_GlyphSet_ranges(self):
-        """ """
-        print "\n\n\ntest_C_GlyphSet_ranges\n\n"
-        ranges       = [ ((1,3),(2,4)),
-                         ((0,2),(1,2)),
-                         ((0,4,'indegree',1),(0,4,'outdegree',1)), # label and 'counts' args ignored for ranges
-                         ((0,4),(0,4)),
-                         ((0,5),(0,5))
-                       ]
-        expect_len   = [  4,
-                          2,
-                         16,
-                         16,
-                         25
-                       ]
-        tests = zip(ranges,expect_len)
-
-        for t in tests:
-            print t 
-            gs = GlyphSet(range=t[0], outdir='../output/pyx_glyphs/', prefix='test_GS_range_')
-            print gs.id
-            print gs
-            # self.log.debug( 'len: ' + str(len(gs)) + ' : ' + str(t[1]))
-            self.assertEqual( len(gs), t[1])
-            gs.write_glyphs()
-            gs.write_signature()
-            # print gs.gcounts
-            print '\n'
-
-    def test_D_GlyphSet_lists(self):
-        """ """
-        print "\n\n\ntest_D_GlyphSet_lists\n\n"
-
-        lists        = [ [(0,1),(1,0),(1,1),(1,2)]
-                       , [(0,1),(1,0),(1,1),(1,2),(2,1),(1,3)]
-                       , [(0,0),(0,1),(1,0),(1,1),(1,2),(1,3),(2,1),(2,2)]
-                       , [(0,0),(0,1),(0,2),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2)]
-                       , [(0,0),(0,1),(0,2),(0,3),(1,0),(1,1),(1,2),(1,3),(2,0),(2,1),(2,2),(2,3),(3,0),(3,1),(3,2),(3,3)]
-                       #, [(0,1,20),(1,0,99),(1,1,50),(1,2,17)] # counts? will fail because degree_glyph isn't dynamically setting the range
-                       , [(0,1,1),(1,0,2),(1,1,3),(1,2,2)]
-                       ]
-        expect_len   = [ 4
-                       , 6
-                       , 8
-                       , 9
-					   , 16
-                       , 4
-                       ]
-        
-        tests = zip(lists,expect_len)
-
-        for t in tests:
-            print t
-            gs = GlyphSet(list=t[0], outdir='../output/pyx_glyphs/', prefix='test_GS_list_')
-            print gs.id
-            print gs
-            # self.log.debug( 'len: ' + str(len(gs)) + ' : ' + str(t[1]))
-            self.assertEqual( len(gs), t[1])
-            gs.write_glyphs()
-            gs.write_signature()
-            # print gs.gcounts
-            print '\n'
-
-    def test_E_pp_graph_stats(self):
-
-        def tprint(*args):
-            for a in args:
-                print a
-
-        g = Graph(directed=True)
-        g.add_vertices(11)
-        g.add_edges([(0,1), (1,2), (1,3), (2,4), (2,5), (3,5), (3,6), (4,7), (4,8), (5,8), (5,9), (6,9), (6,10)])
-
-        a, b = pp_graph_stats(g)
-
-        print 'parse arguments:'
-        tprint(1,2,3)
-        tprint(a)
-        tprint(b)
-        tprint(a[0])
-        tprint(*a)
-        tprint(*a[0])
-        tprint(*a[0][0])
-
-
-
-    def test_twineFile(self):
-        """ """
-        print "\n\n\ntest_twineFile\n\n"
-
-        datafiles    = [ '../input/twine/twine_archive.html'
-                       , '../input/twine/howlingdogs.html'
-                       , '../input/twine/The_Temple_of_No.html'
-                       ]
-
-        formats      = [ 'archive'
-                       , 'published'
-                       , 'published'
-                       ]
-
-        tests = zip(datafiles, formats)
-
-        for t in tests:
-            print t
-            tf = twineFile(t[0], format=t[1])
-            print tf
-            len(tf)
-            tfg = tf.to_graph()
-            gs = GlyphSet(graph=tfg, outdir='../output/pyx_glyphs/', prefix=filelabel(t[0]))
-            print '\n'
-            gs.write_glyphs()
-            gs.write_signature()
+#    def test_AAA_GlyphSet_tgfFile_diff(self):
+#        """ Calculate the difference between GlyphSets """
+#        print "\n\n\ntest_A_GlyphSet_tgfFile_batch\n\n"
+#
+#        datafiles0   = [ '../input/tgf/CYOA_018.tgf' 
+#                       , '../input/tgf/Hopscotch_TOC1.tgf'
+#                       ]
+#
+#        datafiles1   = [ '../input/tgf/CYOA_112.tgf'      
+#                       , '../input/tgf/Hopscotch_TOC2.tgf'
+#                       ]
+#
+#        tests = zip(datafiles0,datafiles1)
+#
+#        for t in tests:
+#            tf0 = tgfFile(t[0])
+#            tfg0 = tf0.to_graph()
+#            gs0 = GlyphSet(graph=tfg0, outdir='../output/pyx_glyphs/', prefix=filelabel(t[0]))
+#            gs0.write_signature()
+#            
+#            tf1 = tgfFile(t[1])
+#            tfg1 = tf1.to_graph()
+#            gs1 = GlyphSet(graph=tfg1, outdir='../output/pyx_glyphs/', prefix=filelabel(t[1]))
+#            gs1.write_signature() 
+#            
+#
+#            ## our comparisons will be thrown off if glyphs have count numbers, so wipe them first
+#            gs0.nocounts()         # set all counts to 1
+#            gs1.nocounts()         # set all counts to 1
+#
+#            ## if we were adding the lists, we would use +:
+#            ##   gsL = gs0.glist+gs1.glist
+#            ## ...but we are getting the difference:
+#            ## http://stackoverflow.com/questions/3462143/get-difference-between-two-lists
+#            ## e.g. list(set(liA) - set(liB))
+#            gsL = list(set(gs0.glist) - set(gs1.glist))
+#            gs = GlyphSet(list=gsL, outdir='../output/pyx_glyphs/', prefix=filelabel(t[0])+filelabel(t[1]))
+#
+#            ## currently combining initialized lists in a new object messes up counts and throws an error, as the counts are preserved from their individual lists...?
+#            ##   e.g.  if r<0 or r>1 or g<0 or g>1 or b<0 or b>1: raise ValueError            
+#            ## ...counts were already stripped above, but just for good measure in case that changes,
+#            ## ...I'll just strip counts for now
+#            gs.nocounts()         # set all counts to 1
+#            gs.write_glyphs()     # write glyph images w/ no counts
+#            gs.write_signature()  # write sig image w/ counts
+#
+#            
+#
+#    def test_B_tgfFile(self):
+#        """ """
+#        print "\n\n\ntest_B_tgfFile\n\n"
+#        datafiles    = [ 
+#                         '../input/tgf/Lies_(Rick_Pryll).tgf'
+#                       , '../input/tgf/love is not CYOA.txt.tgf'
+#                       , '../input/tgf/Paper_Pong.tgf'                    # core.py line 177: IndexError: list index out of range
+#                       , '../input/tgf/Queneau_a-story-as-you-like-it.tgf'
+#                       , '../input/tgf/Sheldon_cookie.tgf'                # core.py 172: ValueError: dictionary update sequence element #0 has length 0; 2 is required
+#                       , '../input/tgf/Thrusts of Justice.tgf'            # core.py 172: ValueError: dictionary update sequence element #0 has length 0; 2 is required
+#                       , '../input/tgf/TutorText0.tgf'
+#                       , '../input/tgf/jsayers.tgf'
+#                       , '../super_mario_bros/super_mario_bros-levels.tgf'
+#                       , '../input/tgf/Yorick.txt.tgf'
+#                       , '../input/tgf/CYOA_018.tgf'
+#                       , '../input/tgf/CYOA_112.tgf'
+#                       , '../input/tgf/Hopscotch_combined.tgf'
+#                       , '../input/tgf/Hopscotch_TOC1.tgf'
+#                       , '../input/tgf/Hopscotch_TOC2.tgf'
+#                       ]
+#        edgecounts   = [ 82,
+#                         184,
+#                         336,
+#                         38,
+#                         22,
+#                         202,
+#                         40,
+#                         42,
+#                         42,
+#                         22,
+#                         108,
+#                         92,
+#                         209,
+#                         55,
+#                         154
+#                       ]
+#        tests = zip(datafiles, edgecounts)
+#        
+#        for t in tests:
+#            print t
+#            tf = tgfFile(t[0])
+#            self.assertTrue(tf.nodelist)
+#            self.assertTrue(tf.nodeset)
+#            self.assertTrue(tf.nodedict)
+#            self.assertTrue(tf.edgelist)
+#            self.assertTrue(tf.filename)
+#            # print tf
+#            self.assertEqual(len(tf),t[1])
+#            ef = tf.write_edgefile()
+#            print '  saving:  ' + str(ef) + '\n'
+#
+#    def test_C_GlyphSet_ranges(self):
+#        """ """
+#        print "\n\n\ntest_C_GlyphSet_ranges\n\n"
+#        ranges       = [ ((1,3),(2,4)),
+#                         ((0,2),(1,2)),
+#                         ((0,4,'indegree',1),(0,4,'outdegree',1)), # label and 'counts' args ignored for ranges
+#                         ((0,4),(0,4)),
+#                         ((0,5),(0,5))
+#                       ]
+#        expect_len   = [  4,
+#                          2,
+#                         16,
+#                         16,
+#                         25
+#                       ]
+#        tests = zip(ranges,expect_len)
+#
+#        for t in tests:
+#            print t 
+#            gs = GlyphSet(range=t[0], outdir='../output/pyx_glyphs/', prefix='test_GS_range_')
+#            print gs.id
+#            print gs
+#            # self.log.debug( 'len: ' + str(len(gs)) + ' : ' + str(t[1]))
+#            self.assertEqual( len(gs), t[1])
+#            gs.write_glyphs()
+#            gs.write_signature()
+#            # print gs.gcounts
+#            print '\n'
+#
+#    def test_D_GlyphSet_lists(self):
+#        """ """
+#        print "\n\n\ntest_D_GlyphSet_lists\n\n"
+#
+#        lists        = [ [(0,1),(1,0),(1,1),(1,2)]
+#                       , [(0,1),(1,0),(1,1),(1,2),(2,1),(1,3)]
+#                       , [(0,0),(0,1),(1,0),(1,1),(1,2),(1,3),(2,1),(2,2)]
+#                       , [(0,0),(0,1),(0,2),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2)]
+#                       , [(0,0),(0,1),(0,2),(0,3),(1,0),(1,1),(1,2),(1,3),(2,0),(2,1),(2,2),(2,3),(3,0),(3,1),(3,2),(3,3)]
+#                       #, [(0,1,20),(1,0,99),(1,1,50),(1,2,17)] # counts? will fail because degree_glyph isn't dynamically setting the range
+#                       , [(0,1,1),(1,0,2),(1,1,3),(1,2,2)]
+#                       ]
+#        expect_len   = [ 4
+#                       , 6
+#                       , 8
+#                       , 9
+#					   , 16
+#                       , 4
+#                       ]
+#        
+#        tests = zip(lists,expect_len)
+#
+#        for t in tests:
+#            print t
+#            gs = GlyphSet(list=t[0], outdir='../output/pyx_glyphs/', prefix='test_GS_list_')
+#            print gs.id
+#            print gs
+#            # self.log.debug( 'len: ' + str(len(gs)) + ' : ' + str(t[1]))
+#            self.assertEqual( len(gs), t[1])
+#            gs.write_glyphs()
+#            gs.write_signature()
+#            # print gs.gcounts
+#            print '\n'
+#
+#    def test_E_pp_graph_stats(self):
+#
+#        def tprint(*args):
+#            for a in args:
+#                print a
+#
+#        g = Graph(directed=True)
+#        g.add_vertices(11)
+#        g.add_edges([(0,1), (1,2), (1,3), (2,4), (2,5), (3,5), (3,6), (4,7), (4,8), (5,8), (5,9), (6,9), (6,10)])
+#
+#        a, b = pp_graph_stats(g)
+#
+#        print 'parse arguments:'
+#        tprint(1,2,3)
+#        tprint(a)
+#        tprint(b)
+#        tprint(a[0])
+#        tprint(*a)
+#        tprint(*a[0])
+#        tprint(*a[0][0])
+#
+#
+#
+#    def test_twineFile(self):
+#        """ """
+#        print "\n\n\ntest_twineFile\n\n"
+#
+#        datafiles    = [ '../input/twine/twine_archive.html'
+#                       , '../input/twine/howlingdogs.html'
+#                       , '../input/twine/The_Temple_of_No.html'
+#                       ]
+#
+#        formats      = [ 'archive'
+#                       , 'published'
+#                       , 'published'
+#                       ]
+#
+#        tests = zip(datafiles, formats)
+#
+#        for t in tests:
+#            print t
+#            tf = twineFile(t[0], format=t[1])
+#            print tf
+#            len(tf)
+#            tfg = tf.to_graph()
+#            gs = GlyphSet(graph=tfg, outdir='../output/pyx_glyphs/', prefix=filelabel(t[0]))
+#            print '\n'
+#            gs.write_glyphs()
+#            gs.write_signature()
 
 
 
