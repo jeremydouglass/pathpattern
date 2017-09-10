@@ -41,7 +41,7 @@ class TestAppSuite(unittest.TestCase):
         for t in tests:
 
             ## SETUP GRAPH
-            # print t
+            print t
             tf = tgfFile(t[0])
             tfg = tf.to_graph()
 
@@ -57,7 +57,7 @@ class TestAppSuite(unittest.TestCase):
             ## WIPE COUNT COLORS AND WRITE GLYPH IMAGES
             ## We could recreate the gs Glyphset with new settings -- but not necessary.
             gs.nocounts()      # set all counts to 1
-            gs.write_glyphs()  # write the glyph images
+            # gs.write_glyphs()  # write the glyph images
             ## Update the file prefix to avoid overwriting the first sig
             gs.prefix = gs.prefix + 'nocounts_'
             gs.write_signature()
@@ -77,7 +77,7 @@ class TestAppSuite(unittest.TestCase):
             # self.assertEqual( len(gsl), len(tf))
             # self.assertEqual( len(gsl), len(tfg))
 
-
+    @unittest.skip("skipping: currently batch testing _A_ sigs only")
     def test_AA_GlyphSet_tgfFile_batch(self):
         """ Collect a set of graphs into one huge metagraph """
         print "\n\n\ntest_A_GlyphSet_tgfFile_batch\n\n"
@@ -126,6 +126,7 @@ class TestAppSuite(unittest.TestCase):
         gs.write_signature()  # write sig image w/ counts
 
 
+    @unittest.skip("skipping: currently batch testing _A_ sigs only")
     def test_AAA_GlyphSet_tgfFile_diff(self):
         """ Calculate the difference between GlyphSets """
         print "\n\n\ntest_A_GlyphSet_tgfFile_batch\n\n"
@@ -172,8 +173,7 @@ class TestAppSuite(unittest.TestCase):
             gs.write_glyphs()     # write glyph images w/ no counts
             gs.write_signature()  # write sig image w/ counts
 
-            
-
+    @unittest.skip("skipping: currently batch testing _A_ sigs only")
     def test_B_tgfFile(self):
         """ """
         print "\n\n\ntest_B_tgfFile\n\n"
@@ -225,6 +225,7 @@ class TestAppSuite(unittest.TestCase):
             ef = tf.write_edgefile()
             print '  saving:  ' + str(ef) + '\n'
 
+    @unittest.skip("skipping: currently batch testing _A_ sigs only")
     def test_C_GlyphSet_ranges(self):
         """ """
         print "\n\n\ntest_C_GlyphSet_ranges\n\n"
@@ -254,6 +255,7 @@ class TestAppSuite(unittest.TestCase):
             # print gs.gcounts
             print '\n'
 
+    @unittest.skip("skipping: currently batch testing _A_ sigs only")
     def test_D_GlyphSet_lists(self):
         """ """
         print "\n\n\ntest_D_GlyphSet_lists\n\n"
@@ -288,6 +290,7 @@ class TestAppSuite(unittest.TestCase):
             # print gs.gcounts
             print '\n'
 
+    @unittest.skip("skipping: currently batch testing _A_ sigs only")
     def test_E_pp_graph_stats(self):
 
         def tprint(*args):
@@ -311,6 +314,7 @@ class TestAppSuite(unittest.TestCase):
 
 
 
+    @unittest.skip("skipping: currently batch testing _A_ sigs only")
     def test_twineFile(self):
         """ """
         print "\n\n\ntest_twineFile\n\n"
