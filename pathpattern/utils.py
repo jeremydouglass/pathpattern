@@ -89,7 +89,7 @@ def filelabel(fpath):
     ## clean filename for prefix label -- pyx complains: ValueError: for security reasons, only characters, digits and the characters '_-./' are allowed in filenames
     ## addressing as per: http://stackoverflow.com/questions/1276764/stripping-everything-but-alphanumeric-chars-from-a-string-in-python
     f_label = f_file.strip().replace (' ', '_').replace('.','_')
-    delchars = ''.join(c for c in map(chr, range(256)) if not c.isalnum() and not c=='_')   
+    delchars = ''.join(c for c in map(chr, range(256)) if not c.isalnum() and not c=='_' and not c=='-')   
     f_label = f_label.translate(None, delchars) + '_'
     return f_label
 

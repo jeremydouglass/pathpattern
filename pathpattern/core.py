@@ -257,7 +257,7 @@ class tgfFile():
         try:
             with open(self.elfilename, "w") as outputfile:
                 for line in self.edgelist:
-                    outputfile.write('\t'.join(line)  + '\n') # tab-delimit the tuples
+                    outputfile.write('\t'.join(line[:2])  + '\n') # slice out edge labels to avoid igraph NCOL error, tab-delimit the tuples
             return self.elfilename
         except OSError:
             print "File not written."
