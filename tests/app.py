@@ -511,21 +511,17 @@ class TestAppSuite(unittest.TestCase):
         """ Collect a set of graphs into one huge metagraph """
         print "\n\n\ntest_A_GlyphSet_tgfFile_batch\n\n"
 
-        datafiles    = [ '../input/tgf/Lies_(Rick_Pryll).tgf'
-                       , '../input/tgf/love is not CYOA.txt.tgf'
-                       , '../input/tgf/Paper_Pong.tgf'                      # core.py 177: IndexError: list index out of range 
-                       , '../input/tgf/Queneau_a-story-as-you-like-it.tgf'
-                       , '../input/tgf/Sheldon_cookie.tgf'                  # core.py 172: ValueError: dictionary update sequence element #0 has length 0; 2 is required
-                       , '../input/tgf/Thrusts of Justice.tgf'              # core.py 172: ValueError: dictionary update sequence element #0 has length 0; 2 is required
-                       , '../input/tgf/TutorText0.tgf'
-                       , '../input/tgf/jsayers.tgf'
-                       , '../super_mario_bros/super_mario_bros-levels.tgf'
-                       , '../input/tgf/Yorick.txt.tgf'
-                       , '../input/tgf/CYOA_018.tgf'
-                       , '../input/tgf/CYOA_112.tgf'
-                       , '../input/tgf/Hopscotch_combined.tgf'
-                       , '../input/tgf/Hopscotch_TOC1.tgf'
-                       , '../input/tgf/Hopscotch_TOC2.tgf'
+        datafiles    = [ dfp + '01-01 CYOA -- Cave of Time, The.txt.tgf'
+                       , dfp + '01-05 CYOA -- Cave of Time, The.txt.tgf'
+                       , dfp + '01-07 CYOA -- Cave of Time, The (115).txt.tgf'
+                       , dfp + '01-07v2 CYOA -- Cave of Time, The (115).txt.tgf'
+                       , dfp + '01-14 CYOA -- By Balloon to the Sahara.txt.tgf'
+                       , dfp + '01-16 CYOA -- Space and Beyond.txt.tgf'
+                       , dfp + '01-20 CYOA -- Mystery of Chimney Rock, The.txt.tgf'
+                       , dfp + '01-24 CYOA -- Your Code Name is Jonah.txt.tgf'
+                       , dfp + '01-27 CYOA -- Third Planet from Altair, The.txt.tgf'
+                       , dfp + '01-29 CYOA -- Deadwood City.txt.tgf'
+                       , dfp + '01-31 CYOA -- Who Killed Harlowe Thrombey.txt.tgf'
                        ]
 
         tests = zip(datafiles)
@@ -770,32 +766,6 @@ class TestAppSuite(unittest.TestCase):
             print '\n'
             gs.write_glyphs()
             gs.write_signature()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         
 
