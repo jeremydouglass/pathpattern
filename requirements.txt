@@ -1,5 +1,5 @@
 python-igraph==0.7.1.post6
-PyX==0.12.1
+PyX==0.12
 Sphinx==1.4.4
 bs4==3.2.1
 regex
