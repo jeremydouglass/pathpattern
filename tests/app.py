@@ -15,6 +15,7 @@ class TestAppSuite(unittest.TestCase):
     log = logging.getLogger( "TestAppSuite.test_app" )
     
 
+    @unittest.skip("skipping")
     def test_A_GlyphSet_tgfFile(self):
         """ """
         print "\n\n\ntest_A_GlyphSet_tgfFile\n\n"
@@ -739,17 +740,79 @@ class TestAppSuite(unittest.TestCase):
 
 
 
-    @unittest.skip("skipping: currently batch testing _A_ sigs only")
+    # @unittest.skip("skipping: currently batch testing _A_ sigs only")
     def test_twineFile(self):
         """ """
         print "\n\n\ntest_twineFile\n\n"
 
-        datafiles    = [ '../input/twine/twine_archive.html'
-                       , '../input/twine/howlingdogs.html'
-                       , '../input/twine/The_Temple_of_No.html'
+        # datafiles    = [ '../pathpattern-data/input2/twine/twine_archive.html'
+        #                , '../pathpattern-data/input2/twine/howlingdogs.html'
+        #                , '../pathpattern-data/input2/twine/The_Temple_of_No.html'
+        #                ]
+        #
+        # formats      = [ 'archive'
+        #                , 'published'
+        #                , 'published'
+        #                ]
+
+        datafiles    = [ '../pathpattern-data/twine-data/100000 years/playonline/100000 years.html'
+                       # , '../pathpattern-data/twine-data/ALL I WANT IS FOR ALL OF MY FRIENDS TO BECOME INSANELY POWERFUL/playonline/All I want is for all of my friends to become insanely powerful.html'
+                       # , '../pathpattern-data/twine-data/Arcane Intern (Unpaid)/playonline/Arcane Intern (Unpaid).html'
+                       # , '../pathpattern-data/twine-data/Chemistry and Physics/source/Chemistry and Physics.html'
+                       # , '../pathpattern-data/twine-data/climbing 208 feet up the ruin wall/playonline/climbing 208 feet up the ruin wall.html'
+                       # , '../pathpattern-data/twine-data/CRYSTAL WARRIOR KESHA/playonline/CRYSTAL_WARRIOR_KESHA.html'
+                       # , '../pathpattern-data/twine-data/CYBERQUEEN/playonline/CYBERQUEEN.html'
+                       # , '../pathpattern-data/twine-data/Dad vs Unicorn/playonline/dad vs unicorn.html'
+                       # , '../pathpattern-data/twine-data/Depression Quest/playonline/Depression Quest_ An Interactive (non)fiction About Living With Depression.html'
+                       # , '../pathpattern-data/twine-data/Even Cowgirls Bleed/playonline/Even Cowgirls Bleed.html'
+                       # , '../pathpattern-data/twine-data/Horse Master/playonline-aws/HorseMaster.html'
+                       , '../pathpattern-data/twine-data/howling dogs/howling dogs.html'
+                       # , '../pathpattern-data/twine-data/KING OF BEES IN FANTASY LAND/playonline/KING OF BEES IN FANTASY LAND_ Start.html'
+                       # , '../pathpattern-data/twine-data/Magical Makeover/playonline/Magical Makeover.html'
+                       # , '../pathpattern-data/twine-data/my fathers long long legs/playonline/my fathers long long legs.html'
+                       # , '../pathpattern-data/twine-data/Myriad/playonline/Myriad.html'
+                       # , '../pathpattern-data/twine-data/rat chaos/playonline/rat chaos.html'
+                       # , '../pathpattern-data/twine-data/Solarium/playonline/Solarium_ Start.html'
+                       # , '../pathpattern-data/twine-data/Summit/playonline/Summit.html'
+                       # , '../pathpattern-data/twine-data/Taghairm/playonline/Taghairm.html'
+                       # , '../pathpattern-data/twine-data/Tangoroa Deep/playonline/Tangoroa Deep.html'
+                       # , '../pathpattern-data/twine-data/The Axolotl Project/playonline/The Axolotl Project.html'
+                       # , '../pathpattern-data/twine-data/The Lift/playonline/The Lift.html'
+                       # , '../pathpattern-data/twine-data/their angelical understanding/playonline/their_angelical_understanding.html'
+                       # , '../pathpattern-data/twine-data/ULTRA BUSINESS TYCOON III/playonline/ULTRA BUSINESS TYCOON III.html'
+                       # , '../pathpattern-data/twine-data/With Those We Love Alive/playonline/With Those We Love Alive.html'
+
+                       ### , '../pathpattern-data/twine-data/Bell Park Youth Detective/playonline/Bell Park Youth Detective.html'
+                       ### , '../pathpattern-data/twine-data/Birdland/playonline/BIRDLAND.html'
+                       ### , '../pathpattern-data/twine-data/Invasion/playonline/Invasion.html'
+                       ### , '../pathpattern-data/twine-data/Known Unknowns/playonline/ep1/Known Unknowns Episode 1.html'
+                       ### , '../pathpattern-data/twine-data/Known Unknowns/playonline/ep2/Known Unknowns Episode 2.html'
+                       ### , '../pathpattern-data/twine-data/Known Unknowns/playonline/ep3/Known Unknowns Episode 3.html'
+                       ### , '../pathpattern-data/twine-data/Known Unknowns/playonline/ep4/Known Unknowns Episode 4.html'
+                       ### , '../pathpattern-data/twine-data/Will Not Let Me Go/playonline/Will Not Let Me Go.html'
+                       ### , '../pathpattern-data/twine-data/You Will Select a Decision No1 Small Child in Woods/playonline/Small Child in Woods.html'
+                       ### , '../pathpattern-data/twine-data/You Will Select a Decision No2 Cow Farming Activities on the Former West/playonline/Cow Farming Activities on the Former West.html'
                        ]
 
-        formats      = [ 'archive'
+        formats      = [ 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
+                       , 'published'
                        , 'published'
                        , 'published'
                        ]
@@ -762,7 +825,7 @@ class TestAppSuite(unittest.TestCase):
             print tf
             len(tf)
             tfg = tf.to_graph()
-            gs = GlyphSet(graph=tfg, outdir='../output/pyx_glyphs/', prefix=filelabel(t[0]))
+            gs = GlyphSet(graph=tfg, outdir='../pathpattern-data/output2/pyx_glyphs/', prefix=filelabel(t[0]))
             print '\n'
             gs.write_glyphs()
             gs.write_signature()
