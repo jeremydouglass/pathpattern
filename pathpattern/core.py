@@ -343,7 +343,10 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
     cmin = max([degreerange[0],1]) 
     cmax = degreerange[1]
     cnorm = float(0)
-    cnorm = float(degreecount - cmin) / float(cmax-cmin) # norm = x[i]−min(x) / (max(x)−min(x))
+    try:
+        cnorm = float(degreecount - cmin) / float(cmax-cmin) # norm = x[i]−min(x) / (max(x)−min(x))
+    except ZeroDivisionError:
+        cnorm = float(0);
 
     if fillcolorflag == 1:
         if cnorm > 0:
