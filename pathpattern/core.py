@@ -673,6 +673,25 @@ class twineFile():
     def __len__(self):    ##### not working for some reason ??
         return len(self.edgelist)
         
+    def clean_nodes_edges_bak(self):
+        self.nodelist.sort()
+        for idx, node in enumerate(self.nodelist):
+            tmpnode = '_' + str(idx) + '_' + re.sub('[\W_]', '_', node[0], flags=re.UNICODE)
+            if tmpnode != node[0]:
+                newnode = (tmpnode, node[1])
+                self.nodelist[idx] = newnode
+                for idx, edge in enumerate(self.edgelist):
+                    if edge[0]==node[0]:
+                        self.edgelist[idx] = (tmpnode,edge[1])
+                for idx, edge in enumerate(self.edgelist):
+                    if edge[1]==node[0]:
+                        self.edgelist[idx] = (edge[0],tmpnode)
+        for idx, edge in enumerate(self.edgelist):
+            self.edgelist[idx] = (
+                re.sub('[\W_]', '_', edge[0], flags=re.UNICODE),
+                re.sub('[\W_]', '_', edge[1], flags=re.UNICODE)
+                )
+
     def clean_nodes_edges(self):
         self.nodelist.sort()
         # rename any existing node names
