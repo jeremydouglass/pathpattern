@@ -4,6 +4,7 @@ from igraph import Graph
 from pyx import *
 from collections import Counter
 from bs4 import BeautifulSoup
+import logging
 import tempfile
 import utils
 import regex as re
@@ -11,6 +12,7 @@ import regex as re
 # g = Graph(directed=True)
 # g.add_vertices(11)
 # g.add_edges([(0,1), (1,2), (1,3), (2,4), (2,5), (3,5), (3,6), (4,7), (4,8), (5,8), (5,9), (6,9), (6,10)])
+logging.basicConfig(level=logging.WARNING)
 
 class GlyphSet():
     """ """
@@ -32,26 +34,31 @@ class GlyphSet():
         ## http://stackoverflow.com/questions/5501725/python-iterate-a-specific-range-in-a-list
         if ('graph' in kwargs and 'range' not in kwargs and 'list' not in kwargs):
             self.graph = kwargs.get('graph')
+
             degrees = set(zip(self.graph.indegree(), self.graph.outdegree())) # a set -- no dups, no counts
-            # print '\n    degree list:    ' + str(degrees)
+            logging.debug('\n    degree list:    ' + str(degrees))
+
             degrees_counter = Counter(zip(self.graph.indegree(), self.graph.outdegree())) # count dups
-            print '* degrees_counter: '
-            print degrees_counter
+            logging.debug('* degrees_counter: ')
+            logging.debug(degrees_counter)
+
             self.mincount = degrees_counter[min(degrees_counter, key=degrees_counter.get)] # http://stackoverflow.com/questions/1661621/finding-the-highest-key/1747244#1747244
             self.maxcount = degrees_counter[max(degrees_counter, key=degrees_counter.get)]
-            print '* self.mincount: '
-            print self.mincount
-            print '* self.maxcount: '
-            print self.maxcount
-            print degrees_counter
+            logging.debug('* self.mincount: ')
+            logging.debug(self.mincount)
+            logging.debug('* self.maxcount: ')
+            logging.debug(self.maxcount)
+            logging.debug(degrees_counter)
             # http://stackoverflow.com/questions/11055902/how-to-convert-a-counter-object-into-a-usable-list-of-pairs
-            # print '\n    degree counter: ' + str(degrees_counter)
+            logging.debug('\n    degree counter: ' + str(degrees_counter))
+
             degrees_counter_list = list(degrees_counter.items())
-            # print '\n    degree counter list: '
-            # print degrees_counter_list
+            logging.debug('\n    degree counter list: ')
+            logging.debug(degrees_counter_list)
+
             degrees_counter_sorted = []
             for key in sorted(degrees_counter.iterkeys()): degrees_counter_sorted.append((key, degrees_counter[key]))
-            print degrees_counter_sorted
+            logging.debug(degrees_counter_sorted)
             # for i in degrees:
             #    self.glist.append(i)
             for i in degrees_counter_sorted:
@@ -167,7 +174,7 @@ class GlyphSet():
         index_str = '_'.join(str(x).zfill(3) for x in index)
         imgfilepath = self.outdir + index_str + '.png'
         if overwrite==False and utils.path.exists(imgfilepath):
-            # print imgfilepath + " : exists (skip write)"
+            logging.debug(imgfilepath + " : exists (skip write)")
             pass
         else:
             c.writeGSfile(filename=imgfilepath)
@@ -377,7 +384,7 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
 
     if fillcolorflag == 1:
         if cnorm > 0:
-            # print 'cmin/cmax: ' + str(cmin) + ' ' + str(cmax) + '    cnorm: ' + str(cnorm)
+            logging.debug('cmin/cmax: ' + str(cmin) + ' ' + str(cmax) + '    cnorm: ' + str(cnorm))
             canvas_.fill(path.rect(0, 0, 1, 1), [color.gradient.WhiteRed.getcolor(cnorm)])
     elif fillcolorflag == 2:
         if (indegree == 0) and (outdegree == 0):
@@ -494,11 +501,11 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
                                 )
             canvas_.stroke(gp, [style.linewidth(.1)])
         if indegree > 1:
-            # print range(0,indegree)
+            logging.debug(range(0,indegree))
             for line in range(0,indegree):
                 linef = float(line)
                 indegreef = float(indegree-1)
-                # print linef, indegreef, linef/indegreef
+                logging.debug(linef, indegreef, linef/indegreef)
                 gp = path.path( path.moveto( linef/indegreef, 1   ),
                                 path.lineto( linef/indegreef, 0.75   ),  # line for each indegree
                                 path.lineto( .5 , 0.75 )                 # round off the corner
@@ -522,11 +529,11 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
                                 )
             canvas_.stroke(gp, [style.linewidth(.1)])
         if outdegree > 1:
-            # print range(0,outdegree)
+            logging.debug(range(0,outdegree))
             for line in range(0,outdegree):
                 linef = float(line)
                 outdegreef = float(outdegree-1)
-                # print linef, outdegreef, linef/outdegreef
+                logging.debug(linef, outdegreef, linef/outdegreef)
                 gp = path.path( path.moveto( linef/outdegreef, 0    ),
                                 path.lineto( linef/outdegreef, 0.25 ),  # line for each outdegree
                                 path.lineto( .5 , 0.25 )                # round off the corner
@@ -599,27 +606,32 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
 
 
 def pp_graph_stats(graph):
-    print '\ngraph stats:'
-    print '\n    degree:         ' + str(graph.degree())
-    print '\n    indegree:       ' + str(graph.indegree())
-    print '\n    outdegree:      ' + str(graph.outdegree())
+    logging.info('\ngraph stats:')
+    logging.info('\n    degree:         ' + str(graph.degree()))
+    logging.info('\n    indegree:       ' + str(graph.indegree()))
+    logging.info('\n    outdegree:      ' + str(graph.outdegree()))
+
     degrees = zip(graph.indegree(), graph.outdegree())
-    print '\n    degree list:    ' + str(degrees)
+    logging.info('\n    degree list:    ' + str(degrees))
+
     degrees_counter = Counter(degrees)
     # http://stackoverflow.com/questions/11055902/how-to-convert-a-counter-object-into-a-usable-list-of-pairs
-    print '\n    degree counter: ' + str(degrees_counter)
+    logging.info('\n    degree counter: ' + str(degrees_counter))
+
     degrees_counter_list = list(degrees_counter.items())
-    print '\n    degree counter list: '
-    print degrees_counter_list
+    logging.info('\n    degree counter list: ')
+    logging.info(degrees_counter_list)
+
     degrees_counter_sorted = []
     for key in sorted(degrees_counter.iterkeys()): degrees_counter_sorted.append((key, degrees_counter[key]))
-    print '\n    degree counter sorted: '
-    print degrees_counter_sorted
-    print '\n    distribution:   \n\n' + str(graph.degree_distribution(mode = 'ALL')) + '\n'
-    print '\n        in-dist:        \n\n' + str(graph.degree_distribution(mode = 'IN')) + '\n'
-    print '\n        out-dist:       \n\n' + str(graph.degree_distribution(mode = 'OUT')) + '\n'
-    return degrees_counter_list, degrees_counter_sorted
 
+    logging.info('\n    degree counter sorted: ')
+    logging.info(degrees_counter_sorted)
+    logging.info('\n    distribution:   \n\n' + str(graph.degree_distribution(mode = 'ALL')) + '\n')
+    logging.info('\n        in-dist:        \n\n' + str(graph.degree_distribution(mode = 'IN')) + '\n')
+    logging.info('\n        out-dist:       \n\n' + str(graph.degree_distribution(mode = 'OUT')) + '\n')
+
+    return degrees_counter_list, degrees_counter_sorted
 
 # def signature():
 #         ins  = 4
@@ -653,8 +665,7 @@ class twineFile():
             raise ValueError('No tgf filename given.')
 
         self.format = kwargs.get('format', '')
-        print 'FORMAT'
-        print self.format
+        logging.debug('format: ', self.format)
 
         self.elfilename = kwargs.get('elfilename', '')
 
@@ -664,7 +675,7 @@ class twineFile():
         # stripping all hyphens because of bs4 voodoo http://stackoverflow.com/questions/25375351/beautifulsoup-unable-to-find-classes-with-hyphens-in-their-name
         # https://www.crummy.com/software/BeautifulSoup/bs4/doc/
         
-        # print self.html_doc
+        logging.debug(self.html_doc)
         soup = BeautifulSoup(self.html_doc, 'html.parser')
 
         self.nodelist = []
@@ -727,10 +738,8 @@ class twineFile():
                 for match in (re.findall(pat, psg.get_text())):
                     self.edgelist.append( ( pname.replace(' ','_') , match.replace('[','').replace(']','').replace(' ','_') ) ) # tuple: ( 'passage name' , matched '[[link 1]]' returned as 'link_1' )
 
-        print self.nodelist
-        print self.edgelist
-        
-        
+        logging.debug(self.nodelist)
+        logging.debug(self.edgelist)
         
     def __str__(self):
         return "twineFile()"
