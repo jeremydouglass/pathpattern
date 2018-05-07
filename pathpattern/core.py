@@ -34,6 +34,7 @@ class GlyphSet():
         self.width = kwargs.get('width', 4)
         self.outdir = kwargs.get('outdir', './')
         self.prefix = kwargs.get('prefix', 'glyph_')
+        self.uscale = kwargs.get('uscale', 1)
         self.mincount = 0
         self.maxcount = 3
         
@@ -141,6 +142,7 @@ class GlyphSet():
     def glyph(self, index):
         """ For a degree pair (in, out), render a glyph. """
         # c = degree_glyph(index[0],index[1])
+        self.scale()
         if len(index)>2:
           c = degree_glyph(index[0],index[1],index[2], (self.mincount,self.maxcount))
         else:
@@ -155,6 +157,11 @@ class GlyphSet():
         #    clist.append(degree_glyph(i[0],i[1]))
         return clist
     
+    def scale(self, val=0):
+        if val == 0:
+            val = self.uscale
+        unit.set(uscale=val, defaultunit="inch") # uscale=0.25 - uscale=3
+            
     def write_glyph(self, index):
         """ For a degree pair (in, out), save a glyph as a PNG file. """
         c = self.glyph(index)
@@ -168,7 +175,8 @@ class GlyphSet():
             self.write_glyph(i)
         return
 
-    def signature(self):
+    def signature(self, deg_max=6, padded=False, has_border=False):
+        self.scale()
         sig = canvas.canvas()
         ### top = 4
         # top = max(self.glist, key=lambda x: x[1]) ## http://stackoverflow.com/questions/4800419/sorting-or-finding-max-value-by-the-second-element-in-a-nested-list-python
@@ -185,17 +193,32 @@ class GlyphSet():
         #   # print str(i) + str(o) + '.png'
         #   # imgfilename = '../output/pyx_glyphs/' + 'pyx_glyph_' + str(i[0]) + str(o[1]) + '.png'
 
+        if padded or has_border:
+            sig_margin = 0.2
+            x = (deg_max + 1) * scale + (1.5 * sig_margin) 
+            border_path = path.path(path.moveto(0, 0),
+                path.lineto(0, x),
+                path.lineto(x, x),
+                path.lineto(x, 0),
+                path.closepath())
+            if padded:
+                border_color = color.cmyk.White
+            if has_border:
+                border_color = color.cmyk.Gray
+            sig.stroke(border_path, [border_color, trafo.translate(-sig_margin*2, -sig_margin*2), style.linewidth(.025)])
+
         for index in self.glist:
           if len(index)>2:
             c = degree_glyph(index[0],index[1],index[2], (self.mincount,self.maxcount))
           else:
             c = degree_glyph(index[0],index[1], 1, (self.mincount,self.maxcount))
           sig.insert(c, [trafo.translate(index[0]*scale, (index[1])*scale)])
-                
+
+          # text writing requires full latex
         return sig
 
     def write_signature(self, **kwargs):
-        c = self.signature()
+        c = self.signature(**kwargs)
         imgfilename = self.outdir + self.prefix + 'signature_' + self.id + '.png'
         c.writeGSfile(filename=imgfilename)
         return imgfilename
@@ -312,10 +335,11 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
     """Return an igraph canvas glyph image based on indegree, outdegree."""
     canvas_ = canvas.canvas();
 
-    ## temp manual flag - turn border off 0, variable 1, solid 2
-    boxcolorflag=2
+    ## temp manual flag - turn border off 0, variable 1, solid 2, type colors 3
+    boxcolorflag=3
     ## temp manual flag - turn color background off and on
-    fillcolorflag=1
+    ##   background off 0, variable red 1, type colors 2
+    fillcolorflag=2
 
     #### COLOR COUNT MAPPING
     # ## pyx color gradients
@@ -349,8 +373,29 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
 
     if fillcolorflag == 1:
         if cnorm > 0:
-            print 'cmin/cmax: ' + str(cmin) + ' ' + str(cmax) + '    cnorm: ' + str(cnorm)
+            # print 'cmin/cmax: ' + str(cmin) + ' ' + str(cmax) + '    cnorm: ' + str(cnorm)
             canvas_.fill(path.rect(0, 0, 1, 1), [color.gradient.WhiteRed.getcolor(cnorm)])
+    elif fillcolorflag == 2:
+        if (indegree == 0) and (outdegree == 0):
+            fillcolor = color.cmyk.White
+        elif indegree == 0:
+            fillcolor = color.cmyk.Green
+        elif indegree == 1 and outdegree == 1:
+            fillcolor = color.cmyk.Yellow
+        elif outdegree == 0:
+            fillcolor = color.cmyk.Red
+        elif indegree == 1 and outdegree > 1:
+            fillcolor = color.cmyk.ProcessBlue
+        elif indegree > 1 and outdegree == 1:
+            fillcolor = color.cmyk.Orange
+        elif indegree > 1 and outdegree > 1:
+            fillcolor = color.cmyk.Orchid
+        else:
+            fillcolor = color.cmyk.Black
+        canvas_.fill(path.rect(0, 0, 1, 1), [fillcolor])
+        # canvas_.fill(path.rect(0, 0, 1, 1), [fillcolor, color.transparency(0.90)])
+        # transparency may not function except in PDF output http://pyx.sourceforge.net/manual/color.html
+
 
     # # if outdegree == 1:
     # #     canvas_.fill(path.rect(0, 0, 1, 1), [color.rgb.red])
@@ -396,7 +441,25 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
         ## manual bounding box
         canvas_.stroke(dg_box, [boxcolor, style.linewidth(.1)]) # manual bounding box
     elif boxcolorflag == 2:
-        boxcolor = color.cmyk.Black
+        boxcolor = color.cmyk.Gray # Black
+    elif boxcolorflag == 3:
+        if (indegree == 0) and (outdegree == 0):
+            boxcolor = color.cmyk.White
+        elif indegree == 0:
+            boxcolor = color.cmyk.Green
+        elif indegree == 1 and outdegree == 1:
+            boxcolor = color.cmyk.Yellow
+        elif outdegree == 0:
+            boxcolor = color.cmyk.Red
+        elif indegree == 1 and outdegree > 1:
+            boxcolor = color.cmyk.ProcessBlue
+        elif indegree > 1 and outdegree == 1:
+            boxcolor = color.cmyk.Orange
+        elif indegree > 1 and outdegree > 1:
+            boxcolor = color.cmyk.Orchid
+        else:
+            boxcolor = color.cmyk.Black
+    if boxcolorflag == 2 or boxcolorflag == 3:
         ## reset box wider for cutter
         dg_box = path.path(path.moveto(-0.2, -0.2),
                            path.lineto(-0.2,  1.2),
@@ -406,8 +469,7 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
                            path.closepath()
                            )
         canvas_.stroke(dg_box, [boxcolor, style.linewidth(.05)]) # manual bounding box
-
-
+    
     node_dot = path.circle(.5, .5, .15)
     canvas_.fill(node_dot)
 
