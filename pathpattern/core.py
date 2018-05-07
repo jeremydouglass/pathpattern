@@ -2,13 +2,13 @@
 
 import logging
 import tempfile
-import utils
 from collections import Counter
 import regex as re
 from bs4 import BeautifulSoup
 from igraph import Graph
 from pyx import canvas, color, path, style, trafo, unit
 
+import pathpattern.utils as utils
 
 logging.basicConfig(level=logging.WARNING)
 
