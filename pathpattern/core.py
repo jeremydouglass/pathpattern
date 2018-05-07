@@ -4,6 +4,7 @@ from igraph import Graph
 from pyx import *
 from collections import Counter
 from bs4 import BeautifulSoup
+import tempfile
 import utils
 import regex as re
 
@@ -777,29 +778,33 @@ class twineFile():
         self.nodelist = mylist
 
 
-    def write_edgefile(self):
+    def write_edgefile(self, temp=True):
         if self.elfilename == '':
             self.elfilename = self.filename + '.el'
-        print type(self.edgelist)
-        print self.edgelist
-        print self.elfilename
-        try:
-            with open(self.elfilename, "w") as outputfile:
+        if temp:
+            with tempfile.NamedTemporaryFile(delete=False) as fp:
                 for line in self.edgelist:
-                    outputfile.write('\t'.join(unicode(v).encode('ascii', 'ignore') for v in line)  + '\n') # tab-delimit the tuples
-                    ## UnicodeEncodeError: 'ascii' codec can't encode character u'\u2026' in position 7: ordinal not in range(128)
-                    ## http://stackoverflow.com/questions/9942594/unicodeencodeerror-ascii-codec-cant-encode-character-u-xa0-in-position-20
-                    ## .encode('utf-8').strip()
-                    ## http://stackoverflow.com/questions/10880813/typeerror-sequence-item-0-expected-string-int-found
-                    ## '\t'.join(str(v) for v in value_list)
-            return self.elfilename
-        except OSError:
-            print "File not written."
+                    fp.write('\t'.join(unicode(v).encode('ascii', 'ignore') for v in line)  + '\n')
+            return fp.name
+        else:
+            try:
+                with open(self.elfilename, "w") as outputfile:
+                    for line in self.edgelist:
+                        # print(line)
+                        outputfile.write('\t'.join(unicode(v).encode('ascii', 'ignore') for v in line)  + '\n') # tab-delimit the tuples
+                        ## UnicodeEncodeError: 'ascii' codec can't encode character u'\u2026' in position 7: ordinal not in range(128)
+                        ## http://stackoverflow.com/questions/9942594/unicodeencodeerror-ascii-codec-cant-encode-character-u-xa0-in-position-20
+                        ## .encode('utf-8').strip()
+                        ## http://stackoverflow.com/questions/10880813/typeerror-sequence-item-0-expected-string-int-found
+                        ## '\t'.join(str(v) for v in value_list)
+                return self.elfilename
+            except OSError:
+                print "File not written."
 
-    def to_graph(self):
+    def to_graph(self, temp=False):
         """ TGF file to igraph graph. Writes an edgefile and passes the filename in for a graph object, as igraph's Read_Ncol can only load from a file."""
         # results = edgelistfile_to_graph(elfilename)
-        return Graph.Read_Ncol(self.write_edgefile(), directed=True)
+        return Graph.Read_Ncol(self.write_edgefile(temp), directed=True)
 
 
 
