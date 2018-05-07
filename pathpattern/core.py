@@ -185,7 +185,7 @@ class GlyphSet():
 
     def signature(self, deg_max=6, padded=False, has_border=False):
         self.scale()
-        sig = canvas.canvas()
+        sig = canvas.canvas([trafo.rotate(90),trafo.mirror(0)])
         ### top = 4
         # top = max(self.glist, key=lambda x: x[1]) ## http://stackoverflow.com/questions/4800419/sorting-or-finding-max-value-by-the-second-element-in-a-nested-list-python
         scale = 1.5
