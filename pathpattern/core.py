@@ -604,8 +604,6 @@ class twineFile():
 
         self.nodelist = []
 
-        self.elfilename = ''
-
         self.edgelist = []
         ## fake data
         # for i in [x for x in range(10)]:
