@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from igraph import Graph
-from pyx import *
-from collections import Counter
-from bs4 import BeautifulSoup
 import logging
 import tempfile
 import utils
+from collections import Counter
 import regex as re
+from bs4 import BeautifulSoup
+from igraph import Graph
+from pyx import canvas, color, path, style, trafo, unit
+
 
 logging.basicConfig(level=logging.WARNING)
 
