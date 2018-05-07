@@ -158,10 +158,18 @@ class GlyphSet():
         return clist
     
     def scale(self, val=0):
+        """Interface to the global pyx scale: unit.set(uscale=val)
+        Either sets scale directly or uses the instance variable default.
+        0.25 scales to 25%, 3.0 scales to 300%.
+        -  http://pyx.sourceforge.net/manual/unit.html
+        -  http://nullege.com/codes/search/pyx.unit.set
+        -  https://github.com/mjg/PyX/blob/master/test/unit/test_unit.py
+        """
+
         if val == 0:
             val = self.uscale
-        unit.set(uscale=val, defaultunit="inch") # uscale=0.25 - uscale=3
-            
+        unit.set(uscale=val, defaultunit="inch")
+    
     def write_glyph(self, index):
         """ For a degree pair (in, out), save a glyph as a PNG file. """
         c = self.glyph(index)
