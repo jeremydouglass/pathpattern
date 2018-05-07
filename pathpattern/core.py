@@ -693,7 +693,7 @@ class twineFile():
                 pname = psg['tiddler']
                 pid = ''
 
-                self.nodelist.append((pname, pid)) # backwards because we are defining edges by names
+                self.nodelist.append((pname.replace(' ','_'), pid)) # backwards because we are defining edges by names
                 ## check passage contents for links
                 ## regex match double-brackets:
                 ## \[\[.*?\]\]
