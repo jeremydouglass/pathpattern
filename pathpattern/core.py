@@ -806,10 +806,10 @@ def edgelistfile_to_edgelist(filename):
     try:
         with open(filename, 'r') as inputfile:
             for line in inputfile:
-                results.append
+                results.append(line)
     except OSError:
         print "File not copied."
-    results = Graph.Read_Ncol(elfilename, directed=True)
+    # results = Graph.Read_Ncol(elfilename, directed=True)
     return results
 
 
