@@ -671,6 +671,112 @@ class twineFile():
     def __len__(self):    ##### not working for some reason ??
         return len(self.edgelist)
         
+    def clean_nodes_edges(self):
+        self.nodelist.sort()
+        # rename any existing node names
+        # in either node or edge references
+        # to avoid id collisions
+        change = '_'
+        for idx, node in enumerate(self.nodelist):
+            # if node[0][0].isdigit():
+            self.nodelist[idx] = (change + node[0], node[1])
+        for idx, edge in enumerate(self.edgelist):
+            self.edgelist[idx] = (change + edge[0], edge[1])
+        for idx, edge in enumerate(self.edgelist):
+            self.edgelist[idx] = (edge[0], change + edge[1])
+
+        # give ids to nodes missing ids (all of them for TwineFile)
+        for idx, node in enumerate(self.nodelist):
+            self.nodelist[idx] = (node[0], idx)
+
+        for idx, node in enumerate(self.nodelist):
+            node_name = node[0]
+            node_id = node[1]
+            # replace matching name based edges with id based edges
+            for idx2, edge in enumerate(self.edgelist):
+                e0 = edge[0]
+                e1 = edge[1]
+                if e0 == node_name:
+                    e0 = str(node_id)
+                if e1 == node_name:
+                    e1 = str(node_id)
+                self.edgelist[idx2] = (e0, e1)
+
+        # extract edge names not found in node list
+        id_counter = len(self.nodelist)
+        for idx, edge in enumerate(self.edgelist):
+            e0 = edge[0]
+            e1 = edge[1]
+            if not e0.isdigit():
+                e0 = str(id_counter)
+                self.nodelist.append((edge[0],e0))
+                id_counter += 1
+            if not e1.isdigit():
+                e1 = str(id_counter)
+                self.nodelist.append((edge[1],e1))
+                id_counter += 1
+            self.edgelist[idx] = (e0, e1)
+
+        # clean node names -- no names in edge list anymore
+        for idx, node in enumerate(self.nodelist):
+            node_name = re.sub('[\W_]', '_', node[0], flags=re.UNICODE)
+            self.nodelist[idx] = (node_name, node[1])
+        
+        # all strings
+        for idx, node in enumerate(self.nodelist):
+            self.nodelist[idx] = (str(node[0]), str(node[1]))
+        for idx, edge in enumerate(self.edgelist):
+            self.edgelist[idx] = (str(edge[0]), str(edge[1]))
+
+        # # strip leading _ from node names
+        for idx, node in enumerate(self.nodelist):
+            self.nodelist[idx] = (str(node[0][1:]), node[1])
+
+    def edge_duplicate_max(self, dupemax=0):
+        if dupemax==0:
+            # remove all duplicate edges
+            self.edgelist = list(set(self.edgelist))
+        else:
+            countmax = dupemax + 1
+            # prune high duplicate edge counts to max
+            edgecounts = Counter(self.edgelist)
+            for key in edgecounts:
+                if edgecounts[key] > countmax:
+                    edgecounts[key] = countmax
+            self.edgelist = list(edgecounts.elements())
+
+    def edge_remover(self, fun):
+        # remove http links
+        mylist = list(self.edgelist)
+        for edge in self.edgelist:
+            if fun(edge[0]) or fun(edge[1]):
+                mylist.remove(edge)
+        self.edgelist = mylist
+
+    def node_name_shorten(self, length):
+        # crop node names
+        for idx, node in enumerate(self.nodelist):
+            if len(node[0])>length:
+                if length > 9:
+                    self.nodelist[idx] = (node[0][:length-3] + '...', node[1])
+                else:
+                    self.nodelist[idx] = (node[0][:length], node[1])
+
+    def node_orphans_remove(self):
+        # remove orphan nodes
+        mylist = list(self.nodelist)
+        for node in self.nodelist:
+            used = False
+            for edge in self.edgelist:
+                if node[1] == edge[0]:
+                    used = True
+                if node[1] == edge[1]:
+                    used = True
+            if not used:
+                mylist.remove(node)
+        self.nodelist = mylist
+
+
     def write_edgefile(self):
         if self.elfilename == '':
             self.elfilename = self.filename + '.el'
