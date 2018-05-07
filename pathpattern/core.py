@@ -161,12 +161,17 @@ class GlyphSet():
             val = self.uscale
         unit.set(uscale=val, defaultunit="inch")
     
-    def write_glyph(self, index):
+    def write_glyph(self, index, overwrite=False):
         """ For a degree pair (in, out), save a glyph as a PNG file. """
         c = self.glyph(index)
-        imgfilename = self.outdir + self.prefix + str(index[0]) + str(index[1]) + '.png'
-        c.writeGSfile(filename=imgfilename)
-        return imgfilename
+        index_str = '_'.join(str(x).zfill(3) for x in index)
+        imgfilepath = self.outdir + index_str + '.png'
+        if overwrite==False and utils.path.exists(imgfilepath):
+            # print imgfilepath + " : exists (skip write)"
+            pass
+        else:
+            c.writeGSfile(filename=imgfilepath)
+            return imgfilepath
     
     def write_glyphs(self):
         """ For a list of degree pairs, save all glyphs as PNG files. """
