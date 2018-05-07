@@ -264,7 +264,7 @@ def tgffile_to_edgelist(tgffilename, elfilename=''):
     if not tgffilename:
         raise ValueError('No tgf filename given.')
     if elfilename == '':
-        elfilename = filename + '.el'
+        elfilename = tgffilename + '.el'
     try:
         with open(tgffilename, 'r') as inputfile:
             with open(elfilename, "w") as outputfile:
@@ -280,7 +280,9 @@ def tgffile_to_edgelist(tgffilename, elfilename=''):
     except OSError:
         print "File not copied."
     results = elfilename
-    
+    return results
+
+
 def edgelistfile_to_graph(elfilename):
     """Stub passing an edgelist to igraph, returns an ncol graph object."""
     return Graph.Read_Ncol(elfilename, directed=True)
@@ -292,7 +294,7 @@ def tgffile_to_graph(tgffilename, elfilename=''):
     if not tgffilename:
         raise ValueError('No tgf filename given.')
     if elfilename == '':
-        elfilename = filename + '.el'
+        elfilename = tgffilename + '.el'
     try:
         elfilename = tgffile_to_edgelist(tgffilename, elfilename)
         results = edgelistfile_to_graph(elfilename)
