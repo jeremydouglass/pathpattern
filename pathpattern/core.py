@@ -140,7 +140,6 @@ class GlyphSet():
 
     def glyph(self, index):
         """ For a degree pair (in, out), render a glyph. """
-        grid = canvas.canvas() ## left in error - comment out?
         # c = degree_glyph(index[0],index[1])
         if len(index)>2:
           c = degree_glyph(index[0],index[1],index[2], (self.mincount,self.maxcount))
