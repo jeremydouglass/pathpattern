@@ -802,6 +802,21 @@ class twineFile():
             except OSError:
                 print "File not written."
 
+    def write_sparse_edgefile(self):
+        if self.elfilename == '':
+            self.elfilename = self.filename + '.el'
+        try:
+            with open(self.elfilename, "w") as outputfile:
+                outputfile.write('# Nodes\n')
+                for nline in self.nodelist:
+                    outputfile.write(str(nline[1]) + '\t\t' + str(nline[0]) + '\n')
+                outputfile.write('\n# Edges\n')
+                for eline in self.edgelist:
+                    outputfile.write('\t'.join(unicode(v).encode('ascii', 'ignore') for v in eline)  + '\n')
+            return self.elfilename
+        except OSError:
+            print "File not written."
+
     def to_graph(self, temp=False):
         """ TGF file to igraph graph. Writes an edgefile and passes the filename in for a graph object, as igraph's Read_Ncol can only load from a file."""
         # results = edgelistfile_to_graph(elfilename)
