@@ -12,15 +12,6 @@ import regex as re
 # g.add_vertices(11)
 # g.add_edges([(0,1), (1,2), (1,3), (2,4), (2,5), (3,5), (3,6), (4,7), (4,8), (5,8), (5,9), (6,9), (6,10)])
 
-
-
-## set pyx unit scale (default 1cm, ~43 pixels) to 1 inch
-## http://pyx.sourceforge.net/manual/unit.html
-## http://nullege.com/codes/search/pyx.unit.set
-## https://github.com/mjg/PyX/blob/master/test/unit/test_unit.py
-unit.set(uscale=3, defaultunit="inch")
-
-
 class GlyphSet():
     """ """
     def __init__(self, **kwargs):
