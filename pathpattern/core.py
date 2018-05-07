@@ -568,12 +568,12 @@ class twineFile(object):
             if tmpnode != node[0]:
                 newnode = (tmpnode, node[1])
                 self.nodelist[idx] = newnode
-                for idx, edge in enumerate(self.edgelist):
-                    if edge[0]==node[0]:
-                        self.edgelist[idx] = (tmpnode,edge[1])
-                for idx, edge in enumerate(self.edgelist):
-                    if edge[1]==node[0]:
-                        self.edgelist[idx] = (edge[0],tmpnode)
+                for idx2, edge in enumerate(self.edgelist):
+                    if edge[0] == node[0]:
+                        self.edgelist[idx2] = (tmpnode, edge[1])
+                for idx2, edge in enumerate(self.edgelist):
+                    if edge[1] == node[0]:
+                        self.edgelist[idx2] = (edge[0], tmpnode)
         for idx, edge in enumerate(self.edgelist):
             self.edgelist[idx] = (
                 re.sub('[\W_]', '_', edge[0], flags=re.UNICODE),
