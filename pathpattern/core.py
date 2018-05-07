@@ -219,7 +219,7 @@ class GlyphSet():
 
     def write_signature(self, **kwargs):
         c = self.signature(**kwargs)
-        imgfilename = self.outdir + self.prefix + 'signature_' + self.id + '.png'
+        imgfilename = self.outdir + self.prefix + '_signature' + '.png'
         c.writeGSfile(filename=imgfilename)
         return imgfilename
 
