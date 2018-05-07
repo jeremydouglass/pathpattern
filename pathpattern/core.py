@@ -9,19 +9,11 @@ import tempfile
 import utils
 import regex as re
 
-# g = Graph(directed=True)
-# g.add_vertices(11)
-# g.add_edges([(0,1), (1,2), (1,3), (2,4), (2,5), (3,5), (3,6), (4,7), (4,8), (5,8), (5,9), (6,9), (6,10)])
 logging.basicConfig(level=logging.WARNING)
 
 class GlyphSet():
     """ """
     def __init__(self, **kwargs):
-        ##  http://stackoverflow.com/questions/1098549/proper-way-to-use-kwargs-in-python
-        # self.inrange = kwargs.get('inrange')    # e.g. inrange = (1,2)
-        # self.outrange = kwargs.get('outrange')
-        
-        # self.glist = kwargs.get('list',[(0,0),(0,1),(1,1),(1,2),(2,1),(1,3),(1,0)])
         self.glist = []
         self.id = 0
         self.width = kwargs.get('width', 4)
@@ -31,7 +23,6 @@ class GlyphSet():
         self.mincount = 0
         self.maxcount = 3
         
-        ## http://stackoverflow.com/questions/5501725/python-iterate-a-specific-range-in-a-list
         if ('graph' in kwargs and 'range' not in kwargs and 'list' not in kwargs):
             self.graph = kwargs.get('graph')
 
@@ -42,14 +33,13 @@ class GlyphSet():
             logging.debug('* degrees_counter: ')
             logging.debug(degrees_counter)
 
-            self.mincount = degrees_counter[min(degrees_counter, key=degrees_counter.get)] # http://stackoverflow.com/questions/1661621/finding-the-highest-key/1747244#1747244
+            self.mincount = degrees_counter[min(degrees_counter, key=degrees_counter.get)]
             self.maxcount = degrees_counter[max(degrees_counter, key=degrees_counter.get)]
             logging.debug('* self.mincount: ')
             logging.debug(self.mincount)
             logging.debug('* self.maxcount: ')
             logging.debug(self.maxcount)
             logging.debug(degrees_counter)
-            # http://stackoverflow.com/questions/11055902/how-to-convert-a-counter-object-into-a-usable-list-of-pairs
             logging.debug('\n    degree counter: ' + str(degrees_counter))
 
             degrees_counter_list = list(degrees_counter.items())
@@ -57,25 +47,21 @@ class GlyphSet():
             logging.debug(degrees_counter_list)
 
             degrees_counter_sorted = []
-            for key in sorted(degrees_counter.iterkeys()): degrees_counter_sorted.append((key, degrees_counter[key]))
+            for key in sorted(degrees_counter.iterkeys()):
+                degrees_counter_sorted.append((key, degrees_counter[key]))
             logging.debug(degrees_counter_sorted)
-            # for i in degrees:
-            #    self.glist.append(i)
+
             for i in degrees_counter_sorted:
                 self.glist.append((i[0][0],i[0][1],i[1]))
+
         elif ('list' in kwargs and 'range' not in kwargs):
             self.glist = kwargs.get('list')
-        # elif ('clist' in kwargs):
-        #     temp_clist = kwargs.get('clist') # {(1, 0): 20, (1, 2): 12, (0, 1): 8, (1, 1): 3}
-        #     for i in temp_clist:
-        #         self.glist.append( i[0][0], i[0][1]), i[1] )
         elif ('range' in kwargs and 'list' not in kwargs):
             self.inrange = kwargs.get('range')[0]
             self.outrange = kwargs.get('range')[1]
             for i in range(self.inrange[0],self.inrange[1]):
                 for o in range(self.outrange[0],self.outrange[1]):
-                    self.glist.append( (int(i),int(o),1) ) # append tuple
-                    ## consider 'slice' function as per http://stackoverflow.com/questions/28652976/passing-array-range-as-argument-to-a-function
+                    self.glist.append( (int(i),int(o),1) )
         else:
             raise ValueError('invalid argument: provide one of the following:\n  range = ((xmin,xmax),(ymin,ymax))\n  list = [(ax,ay),(bx,by),(cx,cy)...]\n  graph = <igraph canvas.canvas object>')
 
@@ -85,18 +71,9 @@ class GlyphSet():
         ## id string -- this isn't unique or unambiguous, but perhaps use different separators and/or do a hash later.
         flatlist = [str(element) for tupl in self.glist for element in tupl] # http://stackoverflow.com/questions/3204245/how-do-i-convert-a-tuple-of-tuples-to-a-one-dimensional-list-using-list-comprehe
         self.id = ''.join(flatlist)
-        
-        # unused
-        tlist = tuple(tuple(x) for x in self.glist)
-        self.gcounts = Counter(tlist)
-            
-
-    # def __repr__(self):
-    #     return "GlyphSet()"
 
     def __str__(self):
         string = 'GlyphSet:\n'
-        # string += str(self.glist)
         widecount = 0
         for i in self.glist:
             if widecount >= self.width:
@@ -110,36 +87,14 @@ class GlyphSet():
         return len(self.glist)
 
     def nocounts(self):
-        ## replace all glist counts with 1
+        """replace all glist counts with 1"""
         newlist = []
         for i in self.glist:
-            # print 'i:'
-            # print i
             newlist.append((i[0], i[1], 1))
         self.glist = newlist
 
-#    def test_degree_glyph_grid(self):
-#        ins  = 4
-#        outs = 4
-#        top = 4
-#        scale = 1.5
-#
-#        grid = canvas.canvas()
-#        for i in range(ins):
-#        	for o in range(outs):
-#        		grid.insert(c, [trafo.translate(i*scale, (top-o)*scale)])
-#        		# grid.text(i*scale, (top-o)*scale+.5, str(i)+'x'+str(o), [text.size(-3)]) ## print label
-#        grid.writeGSfile(filename='pyx_grid.png')
-#
-#        mypage = document.page(grid, margin=1)
-#        mydocument = document.document(mypage)
-#        mydocument.writeSVGfile(filename='pyx_doc.svg')
-#
-#        assert True
-
     def glyph(self, index):
         """ For a degree pair (in, out), render a glyph. """
-        # c = degree_glyph(index[0],index[1])
         self.scale()
         if len(index)>2:
           c = degree_glyph(index[0],index[1],index[2], (self.mincount,self.maxcount))
@@ -152,7 +107,6 @@ class GlyphSet():
         clist = []
         for i in self.glist:
             clist.append(self.glyph(i))
-        #    clist.append(degree_glyph(i[0],i[1]))
         return clist
     
     def scale(self, val=0):
@@ -189,21 +143,7 @@ class GlyphSet():
     def signature(self, deg_max=6, padded=False, has_border=False):
         self.scale()
         sig = canvas.canvas([trafo.rotate(90),trafo.mirror(0)])
-        ### top = 4
-        # top = max(self.glist, key=lambda x: x[1]) ## http://stackoverflow.com/questions/4800419/sorting-or-finding-max-value-by-the-second-element-in-a-nested-list-python
         scale = 1.5
-        # gl = self.glyphs()
-        # print gl
-        # for i in gl:
-        #     sig.insert(i, [trafo.translate(i[0]*scale, (i[1])*scale)])
-        
-        # for i in self.glist:
-        #     c = degree_glyph(*i); # http://stackoverflow.com/questions/1993727/expanding-tuples-into-arguments
-        #     ### sig.insert(c, [trafo.translate(i[0]*scale, (top-i[1])*scale)])
-        #     sig.insert(c, [trafo.translate(i[0]*scale, (i[1])*scale)])
-        #   # print str(i) + str(o) + '.png'
-        #   # imgfilename = '../output/pyx_glyphs/' + 'pyx_glyph_' + str(i[0]) + str(o[1]) + '.png'
-
         if padded or has_border:
             sig_margin = 0.2
             x = (deg_max + 1) * scale + (1.5 * sig_margin) 
@@ -300,7 +240,6 @@ class tgfFile():
         """ TGF file to igraph graph. Writes an edgefile and passes the filename in for a graph object, as igraph's Read_Ncol can only load from a file."""
         # results = edgelistfile_to_graph(elfilename)
         return Graph.Read_Ncol(self.write_edgefile(), directed=True)
-    
 
 def tgffile_to_edgelist(tgffilename, elfilename=''):
     """ """
@@ -352,28 +291,6 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
     ##   background off 0, variable red 1, type colors 2
     fillcolorflag=2
 
-    #### COLOR COUNT MAPPING
-    # ## pyx color gradients
-    # http://pyx.sourceforge.net/manual/color.html
-    # http://pyx.sourceforge.net/manual/gradientname.html#gradientname
-    # http://pydoc.net/Python/PyX/0.12/pyx.color/
-    # ...hatching and fill patterns:
-    # 
-    # see pyx 2.x pattern.py
-    # http://nullege.com/codes/show/src@p@y@pyfeyn-0.3.4@pyfeyn@feynml.py/481/pyx.pattern.hatched
-
-    # ## python normalizing
-    # ## http://stackoverflow.com/questions/26785354/normalizing-a-list-of-numbers-in-python/26785464
-    # ## http://stackoverflow.com/questions/16514443/how-to-normalize-a-list-of-positive-and-negative-decimal-number-to-a-specific-ra
-    #      old_min = min(input)
-    #      old_range = max(input) - old_min
-    # ## Here's the tricky part. You can multiply by the new range and divide by the old range, but that almost guarantees that the top bucket will only get one value in it. You need to expand your output range so that the top bucket is the same size as all the other buckets.
-    #      new_min = -5
-    #      new_range = 5 + 0.9999999999 - new_min
-    #      output = [int((n - old_min) / old_range * new_range + new_min) for n in input]
-
-    # norm = [float(i)/sum(raw) for i in raw]
-
     cmin = max([degreerange[0],1]) 
     cmax = degreerange[1]
     cnorm = float(0)
@@ -404,18 +321,6 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
         else:
             fillcolor = color.cmyk.Black
         canvas_.fill(path.rect(0, 0, 1, 1), [fillcolor])
-        # canvas_.fill(path.rect(0, 0, 1, 1), [fillcolor, color.transparency(0.90)])
-        # transparency may not function except in PDF output http://pyx.sourceforge.net/manual/color.html
-
-
-    # # if outdegree == 1:
-    # #     canvas_.fill(path.rect(0, 0, 1, 1), [color.rgb.red])
-    # if outdegree == 1:
-    #     canvas_.fill(path.rect(0, 0, 1, 1), [color.gradient.WhiteRed.getcolor(0.33)])
-    # if outdegree == 2:
-    #     canvas_.fill(path.rect(0, 0, 1, 1), [color.gradient.WhiteRed.getcolor(0.66)])
-    # if outdegree == 3:
-    #     canvas_.fill(path.rect(0, 0, 1, 1), [color.gradient.WhiteRed.getcolor(1.00)])
 
     dg_box = path.path(path.moveto(0, 0),
                        path.lineto(0, 1),
@@ -425,14 +330,6 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
                        path.closepath()
                        )
     
-    # boxcolor = color.cmyk(0, 0, 0, 0.25)
-    # if (indegree == 0) and (outdegree == 0):
-    #     boxcolor = color.cmyk.White
-    # elif indegree == 0:
-    #     boxcolor = color.cmyk.YellowGreen
-    # elif outdegree == 0:
-    #     boxcolor = color.cmyk.RedOrange
-    
     if boxcolorflag == 1:     
         boxcolor = color.cmyk(0, 0, 0, 0.25)
         if (indegree == 0) and (outdegree == 0):
@@ -441,13 +338,6 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
             boxcolor = color.cmyk.YellowGreen
         elif outdegree == 0:
             boxcolor = color.cmyk.RedOrange   
-        ## sort of works, but ugly
-        ## https://sourceforge.net/p/pyx/mailman/message/3223332/
-        # canvas_.stroke(path.rect(0, 0, 1, 1), [style.linewidth.Thick,
-        #                              color.rgb.red,
-        #                              deco.filled([pattern.hatched(.2 ,45)])])
-        ## ugh
-        # canvas_.stroke(dg_box, [boxcolor, style.linewidth(.1), pattern.hatched(.1,45)])
         
         ## manual bounding box
         canvas_.stroke(dg_box, [boxcolor, style.linewidth(.1)]) # manual bounding box
@@ -542,69 +432,6 @@ def degree_glyph(indegree, outdegree, degreecount = 1, degreerange = (1,3)):
 
     return canvas_
 
-
-# def degree_glyph_old(indegree, outdegree): #2016-06-23 5:20p
-#     """Return an igraph canvas glyph image based on indegree, outdegree."""
-#     canvas_ = canvas.canvas();
-#     dg_box = path.path(path.moveto(0, 0),
-#                        path.lineto(0, 1),
-#                        path.lineto(1, 1),
-#                        path.lineto(1, 0),
-#                        path.lineto(0, 0),
-#                        path.closepath()
-#                        )
-#     canvas_.stroke(dg_box, [color.rgb.green]) # manual bounding box
-#     node_dot = path.circle(.5, .5, .15)
-#     canvas_.fill(node_dot)
-#     in1 = path.path(path.moveto(.5, .5),
-#                     path.lineto(.5, 1)
-#                     )
-#     in2 = path.path(path.moveto(0, 1),
-#                     path.lineto(0, .75),
-#                     path.lineto(1, .75),
-#                     path.lineto(1, 1),
-#                     path.moveto(.5, .5),
-#                     path.lineto(.5, .75)
-#                     )
-#     out1 = path.path(path.moveto(.5, .5),
-#                     path.lineto(.5, 0)
-#                     )
-#     out2 = path.path(path.moveto(0, 0),
-#                     path.lineto(0, .25),
-#                     path.lineto(1, .25),
-#                     path.lineto(1, 0),
-#                     path.moveto(.5, .5),
-#                     path.lineto(.5, .25)
-#                     )
-###   inplus = path.path(path.moveto(1.25, .75),
-###                       path.lineto(1.25, 1),
-###                       path.moveto(1.1, .875),
-###                       path.lineto(1.4, .875),
-###                   )
-###   outplus = path.path(path.moveto(1.25, 0),
-###                       path.lineto(1.25, .25),
-###                       path.moveto(1.1, .125),
-###                       path.lineto(1.4, .125),
-#                     )
-#     if indegree == 1:
-#         canvas_.stroke(in1, [style.linewidth(.1)])
-#     if indegree == 2:
-#         canvas_.stroke(in2, [style.linewidth(.1)])
-#     if indegree == 3:
-#         canvas_.stroke(in1, [style.linewidth(.1)])
-#         canvas_.stroke(in2, [style.linewidth(.1)])
-#         # canvas_.stroke(inplus, [style.linewidth(.1)])
-#     if outdegree == 1:
-#         canvas_.stroke(out1, [style.linewidth(.1)])
-#     if outdegree == 2:
-#         canvas_.stroke(out2, [style.linewidth(.1)])
-#     if outdegree == 3:
-#         canvas_.stroke(out1, [style.linewidth(.1)])
-#         canvas_.stroke(out2, [style.linewidth(.1)])
-#         # canvas_.stroke(outplus, [style.linewidth(.1)])
-#     return canvas_
-
-
 def pp_graph_stats(graph):
     logging.info('\ngraph stats:')
     logging.info('\n    degree:         ' + str(graph.degree()))
@@ -633,25 +460,9 @@ def pp_graph_stats(graph):
 
     return degrees_counter_list, degrees_counter_sorted
 
-# def signature():
-#         ins  = 4
-#         outs = 4
-#         top = 4
-#         scale = 1.5
-#         
-#         for i in range(ins):
-#         	for o in range(outs):
-#         		imgfilename = '../output/pyx_glyphs/' + 'pyx_glyph_' + str(i) + str(o) + '.png'
-#         		c = degree_glyph(i,o); c.writeGSfile(filename=imgfilename)
-#         
-#         assert True
-
-
-
 def batch_degree_glyph(indegree, outdegree):
     """"""
     return True
-
 
 
 #### TWINE ANALYSIS
@@ -706,13 +517,7 @@ class twineFile():
 
                 self.nodelist.append((pname.replace(' ','_'), pid)) # backwards because we are defining edges by names
                 ## check passage contents for links
-                ## regex match double-brackets:
-                ## \[\[.*?\]\]
-                ## https://regex101.com/r/qZ3fA1/2
-                ## http://stackoverflow.com/questions/36442542/having-some-trouble-with-regex-and-double-brackets
                 pat = re.compile(ur'\[\[.*?\]\]')
-                # test_str = u"[[1,2,3],[3,5,3],[9,8,9]] aoeu [5,6,9] aoeu [[4,5,5]]"
-                # print(re.findall(pat, test_str))
                 for match in (re.findall(pat, psg.get_text())):
                     if "|" in match:
                         match = match.split('|')[1]
@@ -728,13 +533,7 @@ class twineFile():
 
                 self.nodelist.append((pname, pid)) # backwards because we are defining edges by names
                 ## check passage contents for links
-                ## regex match double-brackets:
-                ## \[\[.*?\]\]
-                ## https://regex101.com/r/qZ3fA1/2
-                ## http://stackoverflow.com/questions/36442542/having-some-trouble-with-regex-and-double-brackets
                 pat = re.compile(ur'\[\[.*?\]\]')
-                # test_str = u"[[1,2,3],[3,5,3],[9,8,9]] aoeu [5,6,9] aoeu [[4,5,5]]"
-                # print(re.findall(pat, test_str))
                 for match in (re.findall(pat, psg.get_text())):
                     self.edgelist.append( ( pname.replace(' ','_') , match.replace('[','').replace(']','').replace(' ','_') ) ) # tuple: ( 'passage name' , matched '[[link 1]]' returned as 'link_1' )
 
