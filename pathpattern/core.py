@@ -564,7 +564,7 @@ class twineFile(object):
         """Draft Twine edge cleaning code."""
         self.nodelist.sort()
         for idx, node in enumerate(self.nodelist):
-            tmpnode = '_' + str(idx) + '_' + re.sub('[\W_]', '_', node[0], flags=re.UNICODE)
+            tmpnode = '_' + str(idx) + '_' + re.sub(r'[\W_]', '_', node[0], flags=re.UNICODE)
             if tmpnode != node[0]:
                 newnode = (tmpnode, node[1])
                 self.nodelist[idx] = newnode
@@ -576,8 +576,8 @@ class twineFile(object):
                         self.edgelist[idx2] = (edge[0], tmpnode)
         for idx, edge in enumerate(self.edgelist):
             self.edgelist[idx] = (
-                re.sub('[\W_]', '_', edge[0], flags=re.UNICODE),
-                re.sub('[\W_]', '_', edge[1], flags=re.UNICODE)
+                re.sub(r'[\W_]', '_', edge[0], flags=re.UNICODE),
+                re.sub(r'[\W_]', '_', edge[1], flags=re.UNICODE)
                 )
 
     def clean_nodes_edges(self):
@@ -637,7 +637,7 @@ class twineFile(object):
 
         # clean node names -- no names in edge list anymore
         for idx, node in enumerate(self.nodelist):
-            node_name = re.sub('[\W_]', '_', node[0], flags=re.UNICODE)
+            node_name = re.sub(r'[\W_]', '_', node[0], flags=re.UNICODE)
             self.nodelist[idx] = (node_name, node[1])
 
         # all strings
