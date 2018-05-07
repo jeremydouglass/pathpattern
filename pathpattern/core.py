@@ -922,6 +922,10 @@ class twineFile():
 
 
 def build_graph(edgelist):
+    """Builds a graph from an edgelist.
+    To use on a TGF:
+      g = build_graph(utils.tgf_to_list('edges.tgf'))
+    """
     g = Graph(directed=True)
     e = [(a[0],a[1]) for a in edgelist[1]]
     # print e
@@ -929,13 +933,8 @@ def build_graph(edgelist):
     g.add_edges(e)
     return g
     
-    #def test_build_graph(self):
-    #    t = utils.tgf_to_list("../super_mario_bros/super_mario_bros-levels.tgf")
-    #    g = build_graph(t)
-    #    print g
-
-
 def edgelistfile_to_edgelist(filename):
+    """ """
     results = []
     if not filename: raise ValueError('No filename given.')
     try:
@@ -945,7 +944,7 @@ def edgelistfile_to_edgelist(filename):
     except OSError:
         print "File not copied."
     results = Graph.Read_Ncol(elfilename, directed=True)
-
+    return results
 
 def my__tgffile_to_graph(filename):
     """ """
@@ -967,15 +966,4 @@ def my__tgffile_to_graph(filename):
     except OSError:
         print "File not copied."
     results = Graph.Read_Ncol(elfilename, directed=True)
-    # try:
-    #     with open(elfilename, 'r') as elfile:
-    #         # data = inputfile.read() # http://stackoverflow.com/questions/8240647/fast-data-move-from-file-to-some-stringio
-    #         # data = data.split('#\n')
-    #         # stream = StringIO.StringIO(str(data[1]))
-    #         # print stream
-    #         results = Graph.Read_Ncol(elfile, directed=True)
-    # except OSError:
-    #     print "File not loaded."
-
-    # print results
     return results
